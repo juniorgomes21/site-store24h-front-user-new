@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiAxios = axios.create({
-    baseURL: "https://apcodes.top:9988/store/user",
+    baseURL: import.meta.env.VITE_APP_AXIOS,
     data: {},
     headers: {}
 })
