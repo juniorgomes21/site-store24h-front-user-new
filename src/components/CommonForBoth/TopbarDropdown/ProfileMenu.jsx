@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import {
   Dropdown,
@@ -14,10 +14,12 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 
 // users
-import user1 from "../../../assets/images/users/avatar-2.jpg";
+import user1 from "../../../assets/images/users/avatar-1.jpg";
+import AuthContext from "../../../Context/auth";
 
 const ProfileMenu = (props) => {
   // Declare a new state variable, which we'll call "menu"
+  const { userName } = useContext(AuthContext);
   const [menu, setMenu] = useState(false);
 
   const [username, setusername] = useState("agente24h");
@@ -54,7 +56,7 @@ const ProfileMenu = (props) => {
             src={user1}
             alt="Header Avatar"
           />
-          <span className="d-none d-xl-inline-block ms-2 me-1">store24hAgente</span>
+          <span className="d-none d-xl-inline-block ms-2 me-1">{userName}</span>
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block" />
         </DropdownToggle>
         <DropdownMenu className="dropdown-menu-end">

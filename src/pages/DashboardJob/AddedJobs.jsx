@@ -41,7 +41,7 @@ const AddedJobs = () => {
                                 </div>
 
                                 <div className="d-flex">
-                                    <img src={sass} alt="" height="40" className="rounded" />
+                                    <img src={sass} alt=""  className="rounded" />
                                     <div className="ms-2 flex-grow-1">
                                         <h6 className="mb-1 font-size-15"><a href="job-details.html" className="text-body">Frontend Developer</a></h6>
                                         <p className="text-muted mb-0">apcodes, Hong-Kong - <b>47</b> min ago</p>

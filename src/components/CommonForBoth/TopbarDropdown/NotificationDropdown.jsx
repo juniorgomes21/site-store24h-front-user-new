@@ -36,12 +36,12 @@ const NotificationDropdown = props => {
           <div className="p-3">
             <Row className="align-items-center">
               <Col>
-                <h6 className="m-0"> {props.t("Notifications")} </h6>
+                <h6 className="m-0"> {props.t("Notificações")} </h6>
               </Col>
               <div className="col-auto">
                 <a href="#!" className="small">
                   {" "}
-                  View All
+                  Ver Todos
                 </a>
               </div>
             </Row>
@@ -52,16 +52,16 @@ const NotificationDropdown = props => {
               <div className="d-flex">
                 <div className="avatar-xs me-3">
                   <span className="avatar-title bg-primary rounded-circle font-size-16">
-                    <i className="bx bx-cart" />
+                    <img style={{ width: '3rem', height: '2rem' }} src={'/img/servicesImg/wa0.png'} alt="..." />
                   </span>
                 </div>
                 <div className="flex-grow-1">
                   <h6 className="mt-0 mb-1">
-                    {props.t("Your order is placed")}
+                    {props.t("WhatsApp")}
                   </h6>
                   <div className="font-size-12 text-muted">
                     <p className="mb-1">
-                      {props.t("If several languages coalesce the grammar")}
+                      {props.t("Uma nova ativação")}
                     </p>
                     <p className="mb-0">
                       <i className="mdi mdi-clock-outline" />{" "}
@@ -73,16 +73,16 @@ const NotificationDropdown = props => {
             </Link>
             <Link to="" className="text-reset notification-item">
               <div className="d-flex">
-                <img
-                  src={avatar3}
-                  className="me-3 rounded-circle avatar-xs"
-                  alt="user-pic"
-                />
+                <div className="avatar-xs me-3">
+                  <span className="avatar-title bg-primary rounded-circle font-size-16">
+                    <img style={{ width: '3rem', height: '2rem' }} src={'/img/servicesImg/nf0.png'} alt="..." />
+                  </span>
+                </div>
                 <div className="flex-grow-1">
-                  <h6 className="mt-0 mb-1">James Lemire</h6>
+                  <h6 className="mt-0 mb-1">Netflix</h6>
                   <div className="font-size-12 text-muted">
                     <p className="mb-1">
-                      {props.t("It will seem like simplified English") + "."}
+                      {props.t("Uma nova ativação") + "."}
                     </p>
                     <p className="mb-0">
                       <i className="mdi mdi-clock-outline" />
@@ -95,17 +95,17 @@ const NotificationDropdown = props => {
             <Link to="" className="text-reset notification-item">
               <div className="d-flex">
                 <div className="avatar-xs me-3">
-                  <span className="avatar-title bg-success rounded-circle font-size-16">
-                    <i className="bx bx-badge-check" />
+                  <span className="avatar-title bg-primary rounded-circle font-size-16">
+                    <img style={{ width: '3rem', height: '2rem' }} src={'/img/servicesImg/tg0.png'} alt="..." />
                   </span>
                 </div>
                 <div className="flex-grow-1">
                   <h6 className="mt-0 mb-1">
-                    {props.t("Your item is shipped")}
+                    {props.t("Telegram")}
                   </h6>
                   <div className="font-size-12 text-muted">
                     <p className="mb-1">
-                      {props.t("If several languages coalesce the grammar")}
+                      {props.t("Uma nova ativação")}
                     </p>
                     <p className="mb-0">
                       <i className="mdi mdi-clock-outline" />{" "}
@@ -115,20 +115,19 @@ const NotificationDropdown = props => {
                 </div>
               </div>
             </Link>
-
             <Link to="" className="text-reset notification-item">
               <div className="d-flex">
-                <img
-                  src={avatar4}
-                  className="me-3 rounded-circle avatar-xs"
-                  alt="user-pic"
-                />
+                <div className="avatar-xs me-3">
+                  <span className="avatar-title bg-primary rounded-circle font-size-16">
+                    <img style={{ width: '3rem', height: '2rem' }} src={'/img/servicesImg/my0.png'} alt="..." />
+                  </span>
+                </div>
                 <div className="flex-grow-1">
-                  <h6 className="mt-0 mb-1">Salena Layfield</h6>
+                  <h6 className="mt-0 mb-1">Caixa</h6>
                   <div className="font-size-12 text-muted">
                     <p className="mb-1">
                       {props.t(
-                        "As a skeptical Cambridge friend of mine occidental"
+                        "Uma nova ativação"
                       ) + "."}
                     </p>
                     <p className="mb-0">
@@ -147,7 +146,7 @@ const NotificationDropdown = props => {
             >
               <i className="mdi mdi-arrow-right-circle me-1"></i>
               {" "}
-              {props.t("View all")}{" "}
+              {props.t("Ver todos")}{" "}
             </Link>
           </div>
         </DropdownMenu>

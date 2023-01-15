@@ -20,16 +20,7 @@ const Sidebar = props => {
   return (
     <React.Fragment>
       <div className="vertical-menu">
-        <div className="navbar-brand-box">
-          <Link to="/" className="logo logo-dark">
-            <span className="logo-sm">
-              <img src={logo} alt="" height="22" />
-            </span>
-            <span className="logo-lg">
-              <img src={logoDark} alt="" height="17" />
-            </span>
-          </Link>
-
+        <div className="navbar-brand-box" style={{ background: '#0703ad' }}>
           <Link to="/" className="logo logo-light">
             <span className="logo-sm">
               <img src={logo} alt="" height="41" />
@@ -37,7 +28,7 @@ const Sidebar = props => {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ display: 'flex', marginTop: '2.5rem', marginLeft: '2rem' }} className="logo-lg">
                 <img style={{ marginTop: '0.1rem' }} src={logo} alt="" height="40" />
-                <p style={{ marginLeft: '0.3rem', color: '#f7a447' }}> - AGENTE</p>
+                <p style={{ marginLeft: '0.3rem', color: '#f7a447' }}> - STORE24H</p>
               </span>
             </div>
           </Link>

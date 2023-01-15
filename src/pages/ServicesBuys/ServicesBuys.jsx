@@ -88,25 +88,39 @@ const ServicesBuys = props => {
                     <Table sx={{ minWidth: 1300 }} aria-label="customized table">
                         <TableHead>
                         <TableRow>
-                            <StyledTableCell align="center">Seriço comprado</StyledTableCell>
+                            <StyledTableCell align="center">Serviços comprados</StyledTableCell>
                             <StyledTableCell align="center">Dia/Hora da compra</StyledTableCell>
                         </TableRow>
                         </TableHead>
                         <TableBody>
-                        {listServicos.map((row, index) => (
-                            <StyledTableRow key={index}>
-                                <StyledTableCell align="center">{row.servico}</StyledTableCell>
-                                <StyledTableCell align="center">{formatarDataDia(row.localDateTime)}</StyledTableCell>
-                            </StyledTableRow>
-                        ))}
+                            {
+                                listServicos.length == 0 ?
+                                    null
+                                :
+
+                                listServicos.map((row, index) => (
+                                    <StyledTableRow key={index}>
+                                        <StyledTableCell align="center">{row.servico}</StyledTableCell>
+                                        <StyledTableCell align="center">{formatarDataDia(row.localDateTime)}</StyledTableCell>
+                                    </StyledTableRow>
+                                ))
+                            }
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Stack spacing={2}>
-                        <Pagination count={totalPages} color="primary" page={page == 0 ? 1 : page} onChange={handleChange}/>
-                    </Stack>
-                </div>
+                {
+                    listServicos.length == 0 ?
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '3rem', fontSize: '1.2rem', width: '100%' }}>
+                            <p>Você ainda não comprou nenhum serviço!</p>
+                        </div>
+                    :
+
+                    <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                        <Stack spacing={2}>
+                            <Pagination count={totalPages} color="primary" page={page == 0 ? 1 : page} onChange={handleChange}/>
+                        </Stack>
+                    </div>
+                }
             </Container>
         </div>
         </React.Fragment>

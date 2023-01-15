@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, { useContext, useEffect } from "react"
+import React, { useContext } from "react"
 
 import { Switch, BrowserRouter as Router } from "react-router-dom"
 import { connect } from "react-redux"
@@ -57,10 +57,6 @@ const App = props => {
   }
                 
   const Layout = getLayout()
-
-  useEffect(() => {
-    console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-  }, [])
 
   return (
     <React.Fragment>

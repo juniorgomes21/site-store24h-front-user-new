@@ -32,6 +32,37 @@ export async function removeDateAsyncSotorage() {
     }
 }
 
+//User
+export async function setUserNameAsyncStorage(userName) {
+    try {
+        await AsyncStorage.setItem('@UserName', userName);
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export async function getUserNameAsyncStorage() {
+    try {
+        const response = await AsyncStorage.getItem('@UserName');
+        return response;
+
+    } catch (e) {
+        console.log(e);
+        return 'deu errado no get';
+    }
+}
+
+export async function removeUserNameAsyncSotorage() {
+    try {
+        await AsyncStorage.removeItem('@UserName');
+        console.log("deu certo async");
+        
+    } catch (e) {
+        console.log("deu error async");
+
+    }
+}
+
 //ApiKey
 export async function setApiKeyAsyncStorage(token) {
     try {

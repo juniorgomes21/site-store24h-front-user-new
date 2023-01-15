@@ -75,8 +75,8 @@ const Login = props => {
                         <p>Faça login para entra no store24h.</p>
                       </div>
                     </Col>
-                    <Col className="col-5 align-self-end">
-                      <img src={profile} alt="" className="img-fluid" />
+                    <Col className="col-5 align-self-end" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '131px'}}>
+                      <img style={{ width: '80px', height: '80px', borderRadius: '30px' }} src={profile} alt="" className="img-fluid" />
                     </Col>
                   </Row>
                 </div>
