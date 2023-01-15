@@ -1,0 +1,190 @@
+import PropTypes from "prop-types";
+import React,{ useEffect }  from "react";
+
+import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
+
+//redux
+import { useSelector, useDispatch } from "react-redux";
+
+import { withRouter, Link } from "react-router-dom";
+
+// Formik validation
+import * as Yup from "yup";
+import { useFormik } from "formik";
+
+// actions
+import { loginUser } from "../../store/actions";
+
+// import images
+import profile from "../../assets/images/profile-img.png";
+import logo from "/logo.png";
+import { useContext } from "react";
+import AuthContext from "../../Context/auth";
+import { CircularProgress } from "@mui/material";
+
+const Login = props => {
+  //meta title
+  document.title = "Login | apcodes - Vite React Admin & Dashboard Template";
+  const { logado, handleLogin, loadingLogin, loginError } = useContext(AuthContext);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+      console.log("login", logado);
+  }, [logado])
+
+  const validation = useFormik({
+    // enableReinitialize : use this flag when initial values needs to be changed
+    enableReinitialize: true,
+
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().required("Por favor introduza o seu e-mail"),
+      password: Yup.string().required("Por favor, insira sua senha"),
+    }),
+    onSubmit: (values) => {
+      handleLogin(values.email, values.password);
+      // dispatch(loginUser(values, props.history));
+    }
+  });
+
+  const { error } = useSelector(state => ({
+    error: state.Login.error,
+  }));
+
+  return (
+    <React.Fragment>
+
+      <div className="home-btn d-none d-sm-block">
+        <Link to="#" className="text-dark">
+          <i className="bx bx-home h2" />
+        </Link>
+      </div>
+      <div className="account-pages my-5 pt-sm-5">
+        <Container>
+          <Row className="justify-content-center">
+            <Col md={8} lg={6} xl={5}>
+              <Card className="overflow-hidden">
+                <div className="bg-primary bg-soft">
+                  <Row>
+                    <Col xs={7}>
+                      <div className="text-primary p-4">
+                        <h5 className="text-primary">Bem vindo!</h5>
+                        <p>Faça login para entra no store24h.</p>
+                      </div>
+                    </Col>
+                    <Col className="col-5 align-self-end">
+                      <img src={profile} alt="" className="img-fluid" />
+                    </Col>
+                  </Row>
+                </div>
+                <CardBody className="pt-0">
+                  <div>
+                    <Link to="#" className="auth-logo-light">
+                      <div className="avatar-md profile-user-wid mb-4">
+                        <span className="avatar-title rounded-circle bg-light">
+                          <img
+                            src={logo}
+                            alt=""
+                            className=""
+                            height="34"
+                            style={{ borderRadius: '6px' }}
+                          />
+                        </span>
+                      </div>
+                    </Link>
+                  </div>
+                  {
+                    loginError &&
+                      <div style={{ color: 'red' }}>
+                        Ops, email ou senha inválido!
+                      </div>
+                  }
+                  <div className="p-2">
+                    <Form
+                      className="form-horizontal"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        validation.handleSubmit();
+                        return false;
+                      }}
+                    >
+                      {error ? <Alert color="danger">{error}</Alert> : null}
+
+                      <div className="mb-3">
+                        <Label className="form-label">Email</Label>
+                        <Input
+                          name="email"
+                          className="form-control"
+                          placeholder="Seu email"
+                          type="email"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.email || ""}
+                          invalid={
+                            validation.touched.email && validation.errors.email ? true : false
+                          }
+                        />
+                        {validation.touched.email && validation.errors.email ? (
+                          <FormFeedback type="invalid">{validation.errors.email}</FormFeedback>
+                        ) : null}
+                      </div>
+
+                      <div className="mb-3">
+                        <Label className="form-label">Senha</Label>
+                        <Input
+                          name="password"
+                          value={validation.values.password || ""}
+                          type="password"
+                          placeholder="Sua senha"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          invalid={
+                            validation.touched.password && validation.errors.password ? true : false
+                          }
+                        />
+                        {validation.touched.password && validation.errors.password ? (
+                          <FormFeedback type="invalid">{validation.errors.password}</FormFeedback>
+                        ) : null}
+                      </div>
+                          {
+                            loadingLogin ?
+                              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <CircularProgress />
+                              </div>
+                            :
+                              <div className="mt-3 d-grid">
+                                <button
+                                  className="btn btn-primary btn-block"
+                                  type="submit"
+                                >
+                                  Entrar
+                                </button>
+                              </div>
+                          }
+
+                      <div className="mt-4 text-center">
+                        <Link to="/forgot-password" className="text-muted">
+                          <i className="mdi mdi-lock me-1" />
+                          Esqueceu sua senha?
+                        </Link>
+                      </div>
+                    </Form>
+                  </div>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    </React.Fragment>
+  );
+};
+
+export default withRouter(Login);
+
+Login.propTypes = {
+  history: PropTypes.object,
+};

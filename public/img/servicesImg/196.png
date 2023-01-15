@@ -1,0 +1,14 @@
+<html>
+<head>
+    <link href="/assets/css/bootstrap.css?3" rel="stylesheet">
+    <script type="text/javascript" src="//stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body style="text-align: center">
+<a href="/"><img src="/assets/img/logoBlack.png" alt="" width="500"/></a>
+<h1>УПС...</h1>
+<p>Вы случайно попали на несуществующую страницу, сожалеем что так произошло. </p>
+<p>Примем максимум усилий, чтобы так больше не повторялось</p>
+<p>Можете разнести нашу <a href="/feedBack">службу поддержки</a> написав им тикет,</p>
+<p>Они отвечают в течении часа в рабочее время</p>
+</body>
+</html>
