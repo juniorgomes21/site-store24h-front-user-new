@@ -23,8 +23,8 @@ import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import ListServices from "../pages/ListServices/ListServices";
 import ServicesBuys from "../pages/ServicesBuys/ServicesBuys";
 
-
 const authProtectedRoutes = [
+  { path: "/app/store24h/apiConfig", component: ChangePassword},
   { path: "/app/store24h/services", component: ListServices},
   { path: "/app/store24h/servicesBuys", component: ServicesBuys },
 

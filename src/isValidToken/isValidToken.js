@@ -33,6 +33,35 @@ export async function removeDateAsyncSotorage() {
 }
 
 //User
+export async function setUserAsyncStorage(user) {
+    try {
+        await AsyncStorage.setItem('@User', JSON.stringify(user));
+    } catch(e) {
+        console.log("setUserAsyncStorage", e);
+    }
+}
+
+export async function getUserAsyncStorage() {
+    try {
+        
+        const userAsync = await AsyncStorage.getItem('@User');
+
+        if (userAsync) {
+
+            const user = JSON.parse(userAsync);
+
+            return user
+        }
+
+        return null;
+
+    } catch (e) {
+        console.log(e);
+        return 'deu errado no getUserAsyncStorage';
+    }
+}
+
+//User
 export async function setUserNameAsyncStorage(userName) {
     try {
         await AsyncStorage.setItem('@UserName', userName);
@@ -100,7 +129,7 @@ export default async function isValidToken() {
     const token = await AsyncStorage.getItem('@TokenAuthentication');
 
     try {
-        await apiAxios.get('/testartoken', { headers: {'Authorization' : `Bearer ${token}`}});
+        await apiAxios.get('/user/testartoken', { headers: {'Authorization' : `Bearer ${token}`}});
         // await AsyncStorage.setItem('@Logado', JSON.stringify(response.data));
         return true;
 

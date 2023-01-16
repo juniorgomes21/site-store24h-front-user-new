@@ -33,7 +33,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 const ListServices = props => {
 
     //meta title
-    document.title="store24h - Agente | Lista de Serviços";
+    document.title="store24h | Lista de Serviços";
 
     const [open, setOpen] = useState(false);
     const [index, setIndex] = useState(0);
@@ -59,7 +59,7 @@ const ListServices = props => {
     
     async function getService() {
         try {
-          const response = await apiAxios.get(`/apiServicos/getAllServices?page=${page > 0 ? page - 1 : page}`);
+          const response = await apiAxios.get(`/user/apiServicos/getAllServices?page=${page > 0 ? page - 1 : page}`);
           setServiceList(response.data.content);
           setTotalPages(response.data.totalPages);
           setLoadingServices(false);
@@ -85,7 +85,7 @@ const ListServices = props => {
         setLoading(true)
         try {
     
-          await apiAxios.post(`/apiServicos/comprarServico/${id}`, {});
+          await apiAxios.post(`/user/apiServicos/comprarServico/${id}`, {});
     
           setTimeout(() => {
             setOpen(false);
@@ -184,8 +184,8 @@ const ListServices = props => {
             <Container fluid>
             {/* Render Breadcrumb */}
             <Breadcrumbs
-                title={props.t("Dashboard")}
-                breadcrumbItem={props.t("Dashboard")}
+                title={props.t("Lista de Serviços")}
+                breadcrumbItem={props.t("Lista_de_Serviços")}
             />
             {
                 loadingServices ?

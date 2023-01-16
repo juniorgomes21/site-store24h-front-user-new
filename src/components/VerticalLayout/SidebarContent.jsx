@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useContext } from "react"
 
 // //Import Scrollbar
 import SimpleBar from "simplebar-react"
@@ -30,8 +30,10 @@ import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import Notes from '@mui/icons-material/Notes';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import AuthContext from "../../Context/auth";
 
 const SidebarContent = props => {
+  const { user } = useContext(AuthContext);
   const ref = useRef()
   // Use ComponentDidMount and ComponentDidUpdate method symultaniously
   useEffect(() => {
@@ -125,6 +127,15 @@ const SidebarContent = props => {
                 <span>{props.t("Serviços Comprados")}</span>
               </Link>
             </li>
+            {
+              user.role == 'ADMINISTRADOR' &&
+              <li>
+                <Link to="/app/store24h/apiConfig" className="">
+                  <AccountBox sx={{ marginRight: '8px' }}/>
+                  <span>{props.t("Configuração API")}</span>
+                </Link>
+              </li>
+            }
           </ul>
         </div>
       </SimpleBar>

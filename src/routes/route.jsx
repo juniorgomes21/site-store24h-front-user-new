@@ -7,6 +7,7 @@ const Authmiddleware = ({
   layout: Layout,
   isAuthProtected,
   logged,
+  role,
   ...rest
 }) => (
   <Route

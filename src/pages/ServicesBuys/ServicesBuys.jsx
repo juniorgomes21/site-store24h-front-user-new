@@ -48,7 +48,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const ServicesBuys = props => {
 
     //meta title
-    document.title="store24h - Agente | Dashboard";
+    document.title="store24h - Agente | Hitórico de Serviços Comprados";
     const [listServicos, setListServicos] = useState([]);
     //Pagination
     const [totalPages, setTotalPages] = useState(0);
@@ -80,8 +80,8 @@ const ServicesBuys = props => {
             <Container fluid>
             {/* Render Breadcrumb */}
             <Breadcrumbs
-                title={props.t("Dashboard")}
-                breadcrumbItem={props.t("Dashboard")}
+                title={props.t("Hitórico de Serviços Comprados")}
+                breadcrumbItem={props.t("Hitórico_de_Serviços_Comprados")}
             />
                 <p>Aqui estão todas suas compras.</p>
                 <TableContainer component={Paper}>

@@ -1,6 +1,6 @@
 import 'regenerator-runtime/runtime'
 import React, { createContext, useState, useEffect } from "react";
-import isValidToken, { getApiKeyAsyncStorage, getTokenAsyncStorage, getUserNameAsyncStorage, setUserNameAsyncStorage, removeDateAsyncSotorage, setApiKeyAsyncStorage, setTokenAsyncStorage } from "../isValidToken/isValidToken";
+import isValidToken, { getApiKeyAsyncStorage, getTokenAsyncStorage, getUserNameAsyncStorage, setUserNameAsyncStorage, removeDateAsyncSotorage, setApiKeyAsyncStorage, setTokenAsyncStorage, getUserAsyncStorage, setUserAsyncStorage, removeApiKeyAsyncSotorage } from "../isValidToken/isValidToken";
 import apiAxios from '../services/axiosApi';
 
 const AuthContext = createContext(AuthProvider);
@@ -11,9 +11,9 @@ export function AuthProvider({ children }) {
     const [loadingLogin, setLoadingLogin] = useState(false);
     const [loginError, setLoginError] = useState(false);
     const [token, setToken] = useState('');
-    const [apiKey, setApiKey] = useState('');
-    const [userName, setUserName] = useState('store24h');
-
+    const [apiKeySystem, setApiKeySystem] = useState('');
+    const [userName, setUserName] = useState('');
+    const [user, setUser] = useState({});
 
     // Auxiliares
     function auxLogin() {
@@ -32,17 +32,29 @@ export function AuthProvider({ children }) {
         if (response) {
           setLogado(true);
           const tokenAsync = await getTokenAsyncStorage();
-          const apiKey = await getApiKeyAsyncStorage();
-          const userName = await getUserNameAsyncStorage();
-          setUserName(userName);
-          setApiKey(apiKey);
+          const user = await getUserAsyncStorage();
+          setUser(user);
+          const apiKeySystem = await getApiKeyAsyncStorage();
+          setUserName(user.nome);
+          setApiKeySystem(apiKeySystem);
           setToken(String(tokenAsync));
   
         } else {
             handleLogout();
             setLoading(false);
         }
-      }
+    }
+
+    async function apiKeySistem(token) {
+        try {
+            const response = await apiAxios.get('/adm/getapikeysistem', { headers: { 'Authorization' : `Bearer ${token}`}});
+            console.log(response.data);
+            setApiKeyAsyncStorage(response.data);
+
+        } catch(e) {
+            console.log("error apiKeySistem", e);
+        }
+    }
     
     function handleLogout() {
         setToken('');
@@ -54,11 +66,15 @@ export function AuthProvider({ children }) {
     async function handleLogin(email, senha) {
       try {
           setLoadingLogin(true);
-          const response = await apiAxios.post('/auth/login/user', {"email": email, "senha": senha});
+          const response = await apiAxios.post('/user/auth/login/user', {"email": email, "senha": senha});
           setTokenAsyncStorage(response.data.token);
-          const responseUser = await apiAxios.get("/userDetails", { headers: { 'Authorization' : `Bearer ${response.data.token}`}});
-          setUserNameAsyncStorage(responseUser.data.nome);
-          await setApiKeyAsyncStorage(responseUser.data.apiKey);
+          const responseUser = await apiAxios.get("/user/userDetails", { headers: { 'Authorization' : `Bearer ${response.data.token}`}});
+          if(responseUser.data.role == 'ADMINISTRADOR') {
+            await apiKeySistem(response.data.token);
+          } 
+          setUserAsyncStorage(responseUser.data);
+          // setUserNameAsyncStorage(responseUser.data.nome);
+          // await setApiKeyAsyncStorage(responseUser.data.apiKey);
           setLogado(true);
           setLoadingLogin(false);
           window.location.href = "/app/store24h/services";
@@ -70,7 +86,7 @@ export function AuthProvider({ children }) {
     }
 
     return (
-        <AuthContext.Provider value={{ logado, apiKey, userName, loading, token, loadingLogin, loginError, handleLogin, handleLogout, auxLogin }}>
+        <AuthContext.Provider value={{ logado, apiKeySystem, user, userName, loading, token, loadingLogin, loginError, handleLogin, handleLogout, auxLogin }}>
             {children}
         </AuthContext.Provider>
     )
