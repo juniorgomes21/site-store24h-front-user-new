@@ -38,7 +38,6 @@ const SidebarContent = props => {
   // Use ComponentDidMount and ComponentDidUpdate method symultaniously
   useEffect(() => {
     const pathName = props.location.pathname
-
     const initMenu = () => {
       new MetisMenu("#side-menu")
       let matchingMenuItem = null

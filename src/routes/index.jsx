@@ -28,7 +28,7 @@ const authProtectedRoutes = [
   { path: "/app/store24h/services", component: ListServices},
   { path: "/app/store24h/servicesBuys", component: ServicesBuys },
 
-  { path: "/", exact: true, component: () => <Redirect to="/app/store24h/Dashboard" /> },
+  { path: "/", exact: true, component: () => <Redirect to="/app/store24h/services" /> },
 ];
 
 const publicRoutes = [
