@@ -97,17 +97,6 @@ const Header = props => {
               </Link>
             </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                tToggle();
-              }}
-              className="btn btn-sm px-3 font-size-16 header-item "
-              id="vertical-menu-btn"
-            >
-              <i className="fa fa-fw fa-bars" />
-            </button>
-
           </div>
           <div className="d-flex">
 
