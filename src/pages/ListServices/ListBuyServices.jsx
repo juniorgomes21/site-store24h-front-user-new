@@ -14,7 +14,6 @@ import { withTranslation } from "react-i18next";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
@@ -23,40 +22,12 @@ import TextField from '@mui/material/TextField';
 import { CircularProgress } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import apiAxios, { apiAxiosHub } from "../../services/axiosApi";
-import { getActivationsNumbersAsyncStorage, removeActivationsNumbersAsyncStorage, setActivationsNumbersAsyncStorage } from "../../isValidToken/isValidToken";
+import apiAxios from "../../services/axiosApi";
 import AuthContext from "../../Context/auth";
-import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import LinearProgress from '@mui/material/LinearProgress';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
 
 const ListBuyServices = props => {
 
@@ -64,24 +35,23 @@ const ListBuyServices = props => {
     document.title="store24h | Lista de Serviços";
     const [expanded, setExpanded] = useState(false);
 
-    const { apiKeySystem, token } = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
     const [open, setOpen] = useState(false);
-    const [index, setIndex] = useState(0);
     const [loading, setLoading] = useState(false);
     const [loadingServices, setLoadingServices] = useState(true);
     const [serviceList, setServiceList] = useState([]);
     const [itemPer, setItemPer] = useState({});
     //error api
     const [errorApi, setErrorApi] = useState(false);
-    const [errorMsg, setErrorMsg] = useState('Ops, algo deu errado tente Novamente!')
+    const [errorMsg, setErrorMsg] = useState('Ops, algo deu errado tente novamente!');
     //Pagination
     const [totalPages, setTotalPages] = useState(0);
     const [page, setPage] = useState(0);
     //SnackBar
     const [state, setState] = useState({
-        openSnackBar: false,
-        vertical: 'top',
-        horizontal: 'center',
+      openSnackBar: false,
+      vertical: 'top',
+      horizontal: 'center',
     });
 
     const { vertical, horizontal, openSnackBar } = state;
@@ -120,7 +90,6 @@ const ListBuyServices = props => {
           setLoading(true);
           setErrorApi(false);
           const response = await apiAxios.post(`/user/apiServicos/comprarServico/${id}`, { "serviceName": serviceName }, { headers: { 'Authorization' : `Bearer ${token}`}});
-          console.log("response.data", response.data);
           if(response.data == "NO_NUMBERS" || response.data == "NO_BALANCE") {
             if(response.data == "NO_NUMBERS") {
               setErrorMsg("Não tem números disponíveis para este serviço no momento!");
@@ -216,7 +185,7 @@ const ListBuyServices = props => {
             key={vertical + horizontal}
         >
           <Alert onClose={handleCloseSnackBar} severity={errorApi ? "error" : "success"} sx={{ width: '100%' }}>
-            { errorApi ? errorMsg : `Sua compra foi Realizada com Sucesso! visite a Página "Seriços Comprados" para mais informações!`}
+            { errorApi ? errorMsg : `Sua compra foi Realizada com Sucesso!`}
           </Alert>
         </Snackbar>
         <div>

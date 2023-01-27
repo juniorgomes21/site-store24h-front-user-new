@@ -97,7 +97,7 @@ const ChangePassword = props => {
                     {/* Render Breadcrumb */}
                     <Breadcrumbs
                         title={props.t("Configuração ApiKey")}
-                        breadcrumbItem={props.t("Configuração_ApiKey")}
+                        breadcrumbItem={props.t("Configuração ApiKey")}
                     />
                         <p>Para melhorar a segurança, você pode ativar a autenticação de dois fatores instalando o aplicativo Google Authenticator gratuito. Você pode baixá-lo para o seu telefone para as plataformas Google Android e iOS. Depois de ativar a autenticação de dois fatores, você precisará inserir um código sempre que fizer login na sua conta e alterar as configurações no site. </p>
                         <h2>Cole sua ApiKey aqui:</h2>

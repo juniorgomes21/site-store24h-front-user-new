@@ -26,6 +26,12 @@ import Paper from '@mui/material/Paper';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import ReplayIcon from '@mui/icons-material/Replay';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const Activations = props => {
 
@@ -38,6 +44,21 @@ const Activations = props => {
     const [loadingServices, setLoadingServices] = useState(true);
     const [serviceList, setServiceList] = useState([]);
     const [itemPer, setItemPer] = useState({});
+    //Cancel
+    const [indexCancel, setIndexCancel] = useState(-1);
+    const [errorMsgCancel, setErrorMsgCancel] = useState('Ops, algo deu errado tente novamente!');
+    const [loadingCancel, setLoadingCancel] = useState(false);
+    const [errorApiCancel, setErrorApiCancel] = useState(false);
+    
+    //SnackBar
+    const [state, setState] = useState({
+        openSnackBar: false,
+        vertical: 'top',
+        horizontal: 'center',
+    });
+
+    const { vertical, horizontal, openSnackBar } = state;
+
 
     useEffect(() => {
       user();
@@ -69,11 +90,9 @@ const Activations = props => {
     //Messagens
 
     async function getMessages() {
-        console.log("chamou");
         try {
             const token = await getTokenAsyncStorage();
             const response = await apiAxios.get("/user/apiServicos/smsuser", { headers: { 'Authorization' : `Bearer ${token}`}});
-            console.log("response.data", response.data);
             const smsListX = response.data;
             if(smsListX.length > 0) {
               setServiceList(smsListX);
@@ -86,17 +105,31 @@ const Activations = props => {
         }
     }
 
-    function getMsg(index) {
-        const sms = serviceList[index];
-        console.log(serviceList.length);
-        console.log("index", index);
-        console.log(sms);
-        if(sms == undefined) {
-            return "Você ainda não recebeu mensagem desse serviço, aguarde por favor!";
-        } else {
-            return sms.smsList;
+    async function cancelActivation(id, index) {
+        try {
+            setIndexCancel(index);
+            setLoadingCancel(true);
+            setErrorApiCancel(false);
+            const token = await getTokenAsyncStorage();
+            await apiAxios.post(`/user/apiServicos/cancel/activation/${id}`, {}, { headers: { 'Authorization' : `Bearer ${token}`}});
+            await user();
+            setLoadingCancel(false);
+            handleClickSnackBar({vertical: 'top', horizontal: 'center'});
+
+        } catch(e) {
+            setErrorApiCancel(true);
+            setLoadingCancel(false);
+            handleClickSnackBar({vertical: 'top', horizontal: 'center' });
         }
     }
+
+    function handleClickSnackBar(newState) {
+        setState({ openSnackBar: true, ...newState });
+    };
+    
+    function handleCloseSnackBar() {
+        setState({ ...state, openSnackBar: false });
+    };
 
     return (
         <React.Fragment>
@@ -120,7 +153,6 @@ const Activations = props => {
                     :
                         <TableContainer component={Paper}>
                             <Table sx={{ minWidth: 500 }} aria-label="caption table">
-                            <caption>A basic table example with a caption</caption>
                             <TableHead>
                                 <TableRow>
                                     <TableCell align="center">ID</TableCell>
@@ -162,17 +194,21 @@ const Activations = props => {
                                             }
                                         </TableCell>
                                         <TableCell align="center">
-                                            Time
+                                            Em Desenvolvimento.
                                         </TableCell>
                                         <TableCell align="center">
                                             {
                                                 smsDTO.smsList.length == 0 ?
-                                                    <Button
-                                                        variant="contained"
-                                                        color="error"
-                                                    >
-                                                        <CloseIcon />
-                                                    </Button>
+                                                    loadingCancel && index == indexCancel ?
+                                                        <CircularProgress size={30} color="error"/>
+                                                    :
+                                                        <Button
+                                                            variant="contained"
+                                                            color="error"
+                                                            onClick={() => cancelActivation(smsDTO.idActivation, index)}
+                                                        >
+                                                            <CloseIcon />
+                                                        </Button>
                                                 :
                                                     <>
                                                     <Button
@@ -200,6 +236,17 @@ const Activations = props => {
                 }
                 </Container>
             </div>
+            <Snackbar
+                open={openSnackBar}
+                autoHideDuration={6000}
+                onClose={handleCloseSnackBar}
+                anchorOrigin={{ vertical, horizontal }}
+                key={vertical + horizontal}
+            >
+                <Alert onClose={handleCloseSnackBar} severity={errorApiCancel ? "error" : "success"} sx={{ width: '100%' }}>
+                    { errorApiCancel ? errorMsgCancel : `Cancelamento efetuado com sucesso!`}
+                </Alert>
+            </Snackbar>
         </React.Fragment>
     );
 };
