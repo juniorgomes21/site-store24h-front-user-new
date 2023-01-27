@@ -1,6 +1,6 @@
 import 'regenerator-runtime/runtime'
 import React, { createContext, useState, useEffect } from "react";
-import isValidToken, { getApiKeyAsyncStorage, getTokenAsyncStorage, getUserNameAsyncStorage, setUserNameAsyncStorage, removeDateAsyncSotorage, setApiKeyAsyncStorage, setTokenAsyncStorage, getUserAsyncStorage, setUserAsyncStorage, removeApiKeyAsyncSotorage } from "../isValidToken/isValidToken";
+import isValidToken, { getApiKeySystemAsyncStorage, getTokenAsyncStorage, removeDateAsyncSotorage, setApiKeySystemAsyncStorage, setTokenAsyncStorage, getUserAsyncStorage, setUserAsyncStorage } from "../isValidToken/isValidToken";
 import apiAxios from '../services/axiosApi';
 
 const AuthContext = createContext(AuthProvider);
@@ -31,28 +31,17 @@ export function AuthProvider({ children }) {
         const response =  await isValidToken();
         if (response) {
           setLogado(true);
-          const tokenAsync = await getTokenAsyncStorage();
           const user = await getUserAsyncStorage();
           setUser(user);
-          const apiKeySystem = await getApiKeyAsyncStorage();
+          const tokenAsync = await getTokenAsyncStorage();
+          const apiKeySystem = await getApiKeySystemAsyncStorage();
           setUserName(user.nome);
           setApiKeySystem(apiKeySystem);
-          setToken(String(tokenAsync));
+          setToken(tokenAsync);
   
         } else {
             handleLogout();
             setLoading(false);
-        }
-    }
-
-    async function apiKeySistem(token) {
-        try {
-            const response = await apiAxios.get('/adm/getapikeysistem', { headers: { 'Authorization' : `Bearer ${token}`}});
-            console.log(response.data);
-            setApiKeyAsyncStorage(response.data);
-
-        } catch(e) {
-            console.log("error apiKeySistem", e);
         }
     }
     
@@ -69,12 +58,9 @@ export function AuthProvider({ children }) {
           const response = await apiAxios.post('/user/auth/login/user', {"email": email, "senha": senha});
           setTokenAsyncStorage(response.data.token);
           const responseUser = await apiAxios.get("/user/userDetails", { headers: { 'Authorization' : `Bearer ${response.data.token}`}});
-          if(responseUser.data.role == 'ADMINISTRADOR') {
-            await apiKeySistem(response.data.token);
-          } 
+          const responseApiKeySystem = await apiAxios.get('/adm/getapikeysystem');
+          setApiKeySystemAsyncStorage(responseApiKeySystem.data);
           setUserAsyncStorage(responseUser.data);
-          // setUserNameAsyncStorage(responseUser.data.nome);
-          // await setApiKeyAsyncStorage(responseUser.data.apiKey);
           setLogado(true);
           setLoadingLogin(false);
           window.location.href = "/app/store24h/services";

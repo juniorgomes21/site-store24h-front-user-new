@@ -9,7 +9,13 @@ const cache = setupCache({
     }
 })
 
-  
+export const apiAxiosHub = axios.create({
+    baseURL: import.meta.env.VITE_APP_AXIOS_HUB,
+    data: {},
+    headers: {},
+
+})
+
 const apiAxios = axios.create({
     baseURL: import.meta.env.VITE_APP_AXIOS,
     data: {},

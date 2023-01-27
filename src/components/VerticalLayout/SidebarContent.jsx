@@ -13,24 +13,10 @@ import { Link } from "react-router-dom"
 import { withTranslation } from "react-i18next"
 
 //My
-import KeyIcon from '@mui/icons-material/Key';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import AccountBox from '@mui/icons-material/AccountBox';
-import Article from '@mui/icons-material/Article';
-import Sms from '@mui/icons-material/Sms';
-import Settings from '@mui/icons-material/Settings';
-import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
-import SimCard from '@mui/icons-material/SimCard';
-import Man from '@mui/icons-material/Man';
-import Payments from '@mui/icons-material/Payments';
-import AttachMoney from '@mui/icons-material/AttachMoney';
-import ImportExport from '@mui/icons-material/ImportExport';
-import PersonAdd from '@mui/icons-material/PersonAdd';
-import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
-import FingerprintIcon from '@mui/icons-material/Fingerprint';
-import Notes from '@mui/icons-material/Notes';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AuthContext from "../../Context/auth";
+import SettingsIcon from '@mui/icons-material/Settings';
+import ForumIcon from '@mui/icons-material/Forum';
 
 const SidebarContent = props => {
   const { user } = useContext(AuthContext);
@@ -119,7 +105,6 @@ const SidebarContent = props => {
                 <span>{props.t("Lista de Serviços")}</span>
               </Link>
             </li>
-
             <li>
               <Link to="/app/store24h/servicesBuys" className="">
                 <AccountBox sx={{ marginRight: '8px' }}/>
@@ -130,7 +115,7 @@ const SidebarContent = props => {
               user.role == 'ADMINISTRADOR' &&
               <li>
                 <Link to="/app/store24h/apiConfig" className="">
-                  <AccountBox sx={{ marginRight: '8px' }}/>
+                  <SettingsIcon sx={{ marginRight: '8px' }}/>
                   <span>{props.t("Configuração API")}</span>
                 </Link>
               </li>

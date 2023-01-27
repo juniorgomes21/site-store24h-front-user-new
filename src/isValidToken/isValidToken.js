@@ -32,6 +32,83 @@ export async function removeDateAsyncSotorage() {
     }
 }
 
+
+//Activation e Number cell
+export async function setActivationsNumbersAsyncStorage(accessList) {
+    try {
+        await AsyncStorage.setItem('@ActivationsNumbers', JSON.stringify(accessList));
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export async function getActivationsNumbersAsyncStorage() {
+    try {
+        const activationsNumbersAsync= await AsyncStorage.getItem('@ActivationsNumbers');
+        if (activationsNumbersAsync) {
+
+            const activationsNumbers = JSON.parse(activationsNumbersAsync);
+
+            return activationsNumbers;
+        }
+
+        return null;
+
+    } catch (e) {
+        console.log(e);
+        return 'deu errado no get';
+    }
+}
+
+export async function removeActivationsNumbersAsyncStorage() {
+    try {
+        await AsyncStorage.removeItem('@ActivationsNumbers');
+        console.log("deu certo async");
+        
+    } catch (e) {
+        console.log("deu error async");
+
+    }
+}
+
+//Lista de serviços comprados
+export async function setListBuyServicesAsyncStorage(accessList) {
+    try {
+        await AsyncStorage.setItem('@ListBuyServices', JSON.stringify(accessList));
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export async function getListBuyServicesAsyncStorage() {
+    try {
+        const ListBuyServicesAsync = await AsyncStorage.getItem('@ListBuyServices');
+        if (ListBuyServicesAsync) {
+
+            const ListBuyServices = JSON.parse(ListBuyServicesAsync);
+
+            return ListBuyServices;
+        }
+
+        return null;
+
+    } catch (e) {
+        console.log(e);
+        return 'deu errado no get';
+    }
+}
+
+export async function removeListBuyServicesAsyncStorage() {
+    try {
+        await AsyncStorage.removeItem('@ListBuyServices');
+        console.log("deu certo async");
+        
+    } catch (e) {
+        console.log("deu error async");
+
+    }
+}
+
 //User
 export async function setUserAsyncStorage(user) {
     try {
@@ -93,17 +170,17 @@ export async function removeUserNameAsyncSotorage() {
 }
 
 //ApiKey
-export async function setApiKeyAsyncStorage(token) {
+export async function setApiKeySystemAsyncStorage(token) {
     try {
-        await AsyncStorage.setItem('@ApiKey', token);
+        await AsyncStorage.setItem('@ApiKeySystem', token);
     } catch (e) {
         console.log(e);
     }
 }
 
-export async function getApiKeyAsyncStorage() {
+export async function getApiKeySystemAsyncStorage() {
     try {
-        const response = await AsyncStorage.getItem('@ApiKey');
+        const response = await AsyncStorage.getItem('@ApiKeySystem');
         return response;
 
     } catch (e) {
@@ -112,9 +189,9 @@ export async function getApiKeyAsyncStorage() {
     }
 }
 
-export async function removeApiKeyAsyncSotorage() {
+export async function removeApiKeySystemAsyncSotorage() {
     try {
-        await AsyncStorage.removeItem('@ApiKey');
+        await AsyncStorage.removeItem('@ApiKeySystem');
         console.log("deu certo async");
         
     } catch (e) {

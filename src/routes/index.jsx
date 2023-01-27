@@ -22,6 +22,7 @@ import Market from "../pages/Market/Market";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import ListServices from "../pages/ListServices/ListServices";
 import ServicesBuys from "../pages/ServicesBuys/ServicesBuys";
+import Messages from "../pages/Messages/Messages";
 
 const authProtectedRoutes = [
   { path: "/app/store24h/apiConfig", component: ChangePassword},

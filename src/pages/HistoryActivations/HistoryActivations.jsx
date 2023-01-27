@@ -80,7 +80,7 @@ const HistoryActivations = props => {
                     {/* Render Breadcrumb */}
                     <Breadcrumbs
                         title={props.t("Histórico&ativações")}
-                        breadcrumbItem={props.t("Histórico_Ativações")}
+                        breadcrumbItem={props.t("Histórico Ativações")}
                     />
                         <div>
                             Defina o período para obter todas as ativações:

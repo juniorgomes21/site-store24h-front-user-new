@@ -22,7 +22,7 @@ import Paper from '@mui/material/Paper';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { async } from 'regenerator-runtime';
-import { formatarDataDia } from '../../Validation&Formatation/formatation';
+import { formatarDataDia, maskCell } from '../../Validation&Formatation/formatation';
 import apiAxios from "../../services/axiosApi";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -64,7 +64,7 @@ const ServicesBuys = props => {
 
     async function getListCompras() {
         try {
-            const response = await apiAxios.get(`/apiServicos/getComprasFeitas?page=${page > 0 ? page - 1 : page}`);
+            const response = await apiAxios.get(`/user/apiServicos/getComprasFeitas?page=${page > 0 ? page - 1 : page}`);
             setListServicos(response.data.content);
             setTotalPages(response.data.totalPages);
 
@@ -81,15 +81,16 @@ const ServicesBuys = props => {
             {/* Render Breadcrumb */}
             <Breadcrumbs
                 title={props.t("Hitórico de Serviços Comprados")}
-                breadcrumbItem={props.t("Hitórico_de_Serviços_Comprados")}
+                breadcrumbItem={props.t("Hitórico de Serviços Comprados")}
             />
                 <p>Aqui estão todas suas compras.</p>
                 <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 1300 }} aria-label="customized table">
+                    <Table sx={{ minWidth: 700 }} aria-label="customized table">
                         <TableHead>
                         <TableRow>
-                            <StyledTableCell align="center">Serviços comprados</StyledTableCell>
-                            <StyledTableCell align="center">Dia/Hora da compra</StyledTableCell>
+                            <StyledTableCell align="center">Serviço comprado</StyledTableCell>
+                            <StyledTableCell align="center">Número alugado</StyledTableCell>
+                            <StyledTableCell align="center">Dia da compra</StyledTableCell>
                         </TableRow>
                         </TableHead>
                         <TableBody>
@@ -101,6 +102,7 @@ const ServicesBuys = props => {
                                 listServicos.map((row, index) => (
                                     <StyledTableRow key={index}>
                                         <StyledTableCell align="center">{row.servico}</StyledTableCell>
+                                        <StyledTableCell align="center">{maskCell(row.number)}</StyledTableCell>
                                         <StyledTableCell align="center">{formatarDataDia(row.localDateTime)}</StyledTableCell>
                                     </StyledTableRow>
                                 ))
@@ -115,7 +117,7 @@ const ServicesBuys = props => {
                         </div>
                     :
 
-                    <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: '3rem' }}>
                         <Stack spacing={2}>
                             <Pagination count={totalPages} color="primary" page={page == 0 ? 1 : page} onChange={handleChange}/>
                         </Stack>

@@ -22,7 +22,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { CircularProgress } from "@mui/material";
 import apiAxios from "../../services/axiosApi";
-import { setApiKeyAsyncStorage } from "../../isValidToken/isValidToken";
+import { getApiKeySystemAsyncStorage, getUserAsyncStorage, setApiKeySystemAsyncStorage } from "../../isValidToken/isValidToken";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -32,7 +32,8 @@ const ChangePassword = props => {
     
     //meta title
     document.title="store24h - Agente | Configuração ApiKey";
-    const { token, apiKeySystem, user } = useContext(AuthContext);
+    const { token, user } = useContext(AuthContext);
+    const [apiKeySystem, setApiKeySystem] = useState('Carregando...')
     const [loadingPage, setLoadingPage] = useState(true); 
     const [loading, setLoading] = useState(false);
     const [textFieldApiKey, setTextFieldApiKey] = useState('');
@@ -42,30 +43,38 @@ const ChangePassword = props => {
     const [open, setOpen] = useState(false);
     const [textSnackbar, setTextSnackbar] = useState('');
 
+    
+
     useEffect(() => {
         if(user.role != 'ADMINISTRADOR') {
             window.location.href = '/app/store24h/services';
         } else {
+            getApiKeySystem();
             setLoadingPage(false);
         }
     }, [])
+
+    async function getApiKeySystem() {
+        const apiKeySystemAsync = await getApiKeySystemAsyncStorage();
+        setApiKeySystem(apiKeySystemAsync ? apiKeySystemAsync : 'Você ainda não registrou uma ApiKey.');
+    }
 
     async function apiSetApiKeySystem() {
         try {
             setLoading(true);
             setErrorApi(false);
-            const response = await apiAxios.post("/adm/setapikeysistem", { "apiKeySistem": textFieldApiKey }, { headers: { 'Authorization' : `Bearer ${token}`}});
+            const response = await apiAxios.post("/adm/setapikeysystem", { "apiKeySystem": textFieldApiKey }, { headers: { 'Authorization' : `Bearer ${token}`}});
             setTextSnackbar("chave " + response.data + " salva!");
-            setApiKeyAsyncStorage(response.data);
+            setApiKeySystemAsyncStorage(response.data);
             setOpen(true);
             setLoading(false);
 
         } catch(e) {
             // setTextSnackbar(e);
-            setTextSnackbar(e.response.data);
             setErrorApi(true);
             setOpen(true);
             setLoading(false);
+            setTextSnackbar(e.response.data);
         }
     }
 
