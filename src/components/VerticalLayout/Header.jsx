@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 
 // Import menuDropdown
 import LanguageDropdown from "../CommonForBoth/TopbarDropdown/LanguageDropdown";
-import NotificationDropdown from "../CommonForBoth/TopbarDropdown/NotificationDropdown";
 import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu";
 import logo from "../../assets/images/logo.svg";
 import logoLightSvg from "../../assets/images/logo-light.svg";
@@ -19,43 +18,8 @@ import {
   toggleLeftmenu,
   changeSidebarType,
 } from "../../store/actions";
-import { getTokenAsyncStorage } from '../../isValidToken/isValidToken';
-import apiAxios, { apiAxiosHub } from '../../services/axiosApi';
-import AuthContext from '../../Context/auth';
 
 const Header = props => {
-  // const { token } = useContext(AuthContext);
-  const [search, setsearch] = useState(false);
-  const [megaMenu, setmegaMenu] = useState(false);
-  const [socialDrp, setsocialDrp] = useState(false);
-  const [smsList, setSmsList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [lengthList, setLengthList] = useState(0);
-
-  useEffect(() => {
-    user();
-    setInterval(user, 15000);
-  }, [])
-
-  async function user() {
-      try {
-        const token = await getTokenAsyncStorage();
-        const response = await apiAxios.post('/user/apiServicos/activation', { "quantityActivation": smsList.length }, { headers: { 'Authorization' : `Bearer ${token}`}});
-        const listActivations = response.data;
-        if(listActivations.length == 0) {
-          setLoading(false);
-        } else {
-          if(listActivations.length > smsList.length) {
-            setSmsList(listActivations);
-            setLengthList(lengthList + 1);
-          }
-          setLoading(false);
-        }
-      } catch(e) {
-        console.log(e);
-        setLoading(false);
-      }
-  }
 
   return (
     <React.Fragment>

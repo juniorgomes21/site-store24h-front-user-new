@@ -50,8 +50,8 @@ const ListBuyServices = props => {
     //SnackBar
     const [state, setState] = useState({
       openSnackBar: false,
-      vertical: 'top',
-      horizontal: 'center',
+      vertical: 'bottom',
+      horizontal: 'left',
     });
 
     const { vertical, horizontal, openSnackBar } = state;
@@ -95,18 +95,18 @@ const ListBuyServices = props => {
               setErrorMsg("Não tem números disponíveis para este serviço no momento!");
             }
             setErrorApi(true);
-            handleClickSnackBar({vertical: 'top', horizontal: 'center' });
+            handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
             setLoading(false);
             return;
           }
           setOpen(false);
-          handleClickSnackBar({vertical: 'top', horizontal: 'center' });
+          handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
           setLoading(false);
     
         } catch(e) {
           console.log("compraServico", e);
           setErrorApi(true);
-          handleClickSnackBar({vertical: 'top', horizontal: 'center' });
+          handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
           setLoading(false);
         }
     }
@@ -134,7 +134,7 @@ const ListBuyServices = props => {
     };
 
     return (
-        <React.Fragment>
+        <>
         <div className="page-content">
             <Container fluid>
             {/* Render Breadcrumb */}
@@ -144,28 +144,28 @@ const ListBuyServices = props => {
             />
             {
                 loadingServices ?
-                <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: '3rem', marginBottom: '3rem' }}>
-                  <CircularProgress />
-                </div>
+                  <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: '3rem', marginBottom: '3rem' }}>
+                    <CircularProgress />
+                  </div>
                 :
-                <div style={{ display: 'grid', justifyItems: 'center', width: '100%' }}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', width: '95%'}}>
-                    {serviceList.map((item, index) => (
-                        <div
-                            key={index}
-                            style={{ display: 'flex', width: '20rem', height: '4rem', background: '#d3d3d3', marginLeft: '2rem', marginBottom: '2rem', alignItems: 'center' }}
-                            onClick={() => handleClickOpen(item)}
-                        >
-                            <div style={{ marginLeft: '1rem'}}>
-                            <img src={getImg(item.alias)} alt="naadad" style={{ width: '2rem', height: '2rem'}}/>
-                            </div>
-                            <div style={{ display: 'flex', marginLeft: '1rem', alignItems: 'center'}}>
-                            <p style={{ fontWeight: 'bold', margin: 0 }}>{item.alias} -</p><p style={{ marginLeft: '0.3rem', margin: 0}}> {item.name}</p>
-                            </div>
-                        </div>
-                    ))}
-                    </div>
-                </div>
+                  <div style={{ display: 'grid', justifyItems: 'center', width: '100%' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', width: '95%'}}>
+                      {serviceList.map((item, index) => (
+                          <div
+                              key={index}
+                              style={{ display: 'flex', width: '20rem', height: '4rem', background: '#d3d3d3', marginLeft: '2rem', marginBottom: '2rem', alignItems: 'center' }}
+                              onClick={() => handleClickOpen(item)}
+                          >
+                              <div style={{ marginLeft: '1rem'}}>
+                                <img src={getImg(item.alias)} alt="naadad" style={{ width: '2rem', height: '2rem'}}/>
+                              </div>
+                              <div style={{ display: 'flex', marginLeft: '1rem', alignItems: 'center'}}>
+                                <p style={{ fontWeight: 'bold', margin: 0 }}>{item.alias} -</p><p style={{ marginLeft: '0.3rem', margin: 0}}> {item.name}</p>
+                              </div>
+                          </div>
+                      ))}
+                      </div>
+                  </div>
             }
             {
                 !serviceList == 0 && 
@@ -245,7 +245,7 @@ const ListBuyServices = props => {
               </DialogActions>
             </Dialog>
         </div>
-        </React.Fragment>
+        </>
     );
 };
 

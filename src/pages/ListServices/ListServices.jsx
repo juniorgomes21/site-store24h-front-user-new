@@ -20,7 +20,6 @@ const ListServices = props => {
 
     return (
         <React.Fragment>
-          <ListBuyServices />
           <Activations />
         </React.Fragment>
     );

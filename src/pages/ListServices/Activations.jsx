@@ -40,10 +40,6 @@ const Activations = props => {
     const [smsList, setSmsList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [lengthList, setLengthList] = useState(0);
-    //Messagens
-    const [loadingServices, setLoadingServices] = useState(true);
-    const [serviceList, setServiceList] = useState([]);
-    const [itemPer, setItemPer] = useState({});
     //Cancel
     const [indexCancel, setIndexCancel] = useState(-1);
     const [errorMsgCancel, setErrorMsgCancel] = useState('Ops, algo deu errado tente novamente!');
@@ -53,8 +49,8 @@ const Activations = props => {
     //SnackBar
     const [state, setState] = useState({
         openSnackBar: false,
-        vertical: 'top',
-        horizontal: 'center',
+        vertical: 'bottom',
+        horizontal: 'left',
     });
 
     const { vertical, horizontal, openSnackBar } = state;
@@ -62,46 +58,27 @@ const Activations = props => {
 
     useEffect(() => {
       user();
-      getMessages();
       setInterval(user, 15000);
-      setInterval(getMessages, 15000);
     }, [])
   
     async function user() {
         try {
-          const token = await getTokenAsyncStorage();
-          const response = await apiAxios.post('/user/apiServicos/activation', { "quantityActivation": smsList.length }, { headers: { 'Authorization' : `Bearer ${token}`}});
-          const listActivations = response.data;
-          if(listActivations.length == 0) {
-            setLoading(false);
-          } else {
-            if(listActivations.length > smsList.length) {
-              setSmsList(listActivations);
-              setLengthList(lengthList + 1);
-            }
-            setLoading(false);
-          }
-        } catch(e) {
-          console.log(e);
-          setLoading(false);
-        }
-    }
-
-    //Messagens
-
-    async function getMessages() {
-        try {
             const token = await getTokenAsyncStorage();
-            const response = await apiAxios.get("/user/apiServicos/smsuser", { headers: { 'Authorization' : `Bearer ${token}`}});
-            const smsListX = response.data;
-            if(smsListX.length > 0) {
-              setServiceList(smsListX);
+            const response = await apiAxios.post('/user/apiServicos/activation', { "quantityActivation": smsList.length }, { headers: { 'Authorization' : `Bearer ${token}`}});
+            const listActivations = response.data;
+            if(listActivations.length == 0) {
+                setSmsList([]);
+                setLoading(false);
+            } else {
+                if(listActivations.length > smsList.length) {
+                setSmsList(listActivations);
+                setLengthList(lengthList + 1);
+                }
+                setLoading(false);
             }
-            setLoadingServices(false);
-
         } catch(e) {
-            console.log("error getMessages", e);
-            setLoadingServices(false);
+            console.log(e);
+            setLoading(false);
         }
     }
 
@@ -114,12 +91,12 @@ const Activations = props => {
             await apiAxios.post(`/user/apiServicos/cancel/activation/${id}`, {}, { headers: { 'Authorization' : `Bearer ${token}`}});
             await user();
             setLoadingCancel(false);
-            handleClickSnackBar({vertical: 'top', horizontal: 'center'});
+            handleClickSnackBar({vertical: 'bottom', horizontal: 'left'});
 
         } catch(e) {
             setErrorApiCancel(true);
             setLoadingCancel(false);
-            handleClickSnackBar({vertical: 'top', horizontal: 'center' });
+            handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
         }
     }
 
@@ -190,11 +167,13 @@ const Activations = props => {
                                                 smsDTO.smsList.length == 0 ?
                                                     <CircularProgress size={30}/>
                                                 :
-                                                    smsDTO.smsList
+                                                    smsDTO.smsList[0]
                                             }
                                         </TableCell>
                                         <TableCell align="center">
-                                            Em Desenvolvimento.
+                                            {
+                                                smsDTO.min == -1 ? "Concluído" : smsDTO.min + " min"
+                                            }
                                         </TableCell>
                                         <TableCell align="center">
                                             {

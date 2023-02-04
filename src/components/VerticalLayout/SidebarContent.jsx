@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import React, { useEffect, useRef, useContext } from "react"
+import React, { useEffect, useRef, useContext, useState } from "react"
 
 // //Import Scrollbar
 import SimpleBar from "simplebar-react"
@@ -14,15 +14,47 @@ import { withTranslation } from "react-i18next"
 
 //My
 import AccountBox from '@mui/icons-material/AccountBox';
-import AuthContext from "../../Context/auth";
 import SettingsIcon from '@mui/icons-material/Settings';
-import ForumIcon from '@mui/icons-material/Forum';
+import apiAxios from "../../services/axiosApi";
+import Button from "@mui/material/Button";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import AuthContext from "../../Context/auth";
+import { CircularProgress } from "@mui/material"
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const SidebarContent = props => {
   const { user } = useContext(AuthContext);
-  const ref = useRef()
+  const ref = useRef();
+
+  const [serviceList, setServiceList] = useState([]);
+  const [indexClick, setIndexClick] = useState(-1);
+  const { token } = useContext(AuthContext);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingServices, setLoadingServices] = useState(true);
+  const [itemPer, setItemPer] = useState({});
+  //error api
+  const [errorApi, setErrorApi] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('Ops, algo deu errado tente novamente!');
+  //Pagination
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState(0);
+  //SnackBar
+  const [state, setState] = useState({
+    openSnackBar: false,
+    vertical: 'bottom',
+    horizontal: 'left',
+  });
+
+  const { vertical, horizontal, openSnackBar } = state;
+
   // Use ComponentDidMount and ComponentDidUpdate method symultaniously
   useEffect(() => {
+    getService();
     const pathName = props.location.pathname
     const initMenu = () => {
       new MetisMenu("#side-menu")
@@ -45,6 +77,43 @@ const SidebarContent = props => {
   useEffect(() => {
     ref.current.recalculate()
   })
+
+  async function getService() {
+    try {
+      const response = await apiAxios.get(`/user/apiServicos/getAllServices`);
+      console.log(response.data);
+      setServiceList(response.data);
+    } catch(e) {
+      console.log("getServiceslateral", e);
+      setLoadingServices(false);
+    }
+  }
+
+  async function compraServico(id, serviceName) {
+    try {
+        setLoading(true);
+        setErrorApi(false);
+        const response = await apiAxios.post(`/user/apiServicos/comprarServico/${id}`, { "serviceName": serviceName }, { headers: { 'Authorization' : `Bearer ${token}`}});
+        if(response.data == "NO_NUMBERS" || response.data == "NO_BALANCE") {
+          if(response.data == "NO_NUMBERS") {
+            setErrorMsg("Não tem números disponíveis para este serviço no momento!");
+          }
+          setErrorApi(true);
+          handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
+          setLoading(false);
+          return;
+        }
+        setOpen(false);
+        handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
+        setLoading(false);
+  
+      } catch(e) {
+        console.log("compraServico", e);
+        setErrorApi(true);
+        handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
+        setLoading(false);
+      }
+  }
 
   function scrollElement(item) {
     if (item) {
@@ -93,6 +162,24 @@ const SidebarContent = props => {
     return false
   }
 
+  function formatPrice(price) {
+    let priceString = 'R$ ' + price?.toFixed(2);
+
+    return priceString;
+  }
+
+  function getImg(name) {
+    return `/img/servicesImg/${name}0.png`;
+  }
+
+  function handleClickSnackBar(newState) {
+    setState({ openSnackBar: true, ...newState });
+  };
+
+  function handleCloseSnackBar() {
+    setState({ ...state, openSnackBar: false });
+  };
+
   return (
     <React.Fragment>
       <SimpleBar className="h-100" ref={ref} style={{ background: '#0703ad' }}>
@@ -102,7 +189,7 @@ const SidebarContent = props => {
             <li>
               <Link to="/app/store24h/services">
                 <i className="bx bx-home-circle"></i>
-                <span>{props.t("Lista de Serviços")}</span>
+                <span>{props.t("Ativações")}</span>
               </Link>
             </li>
             <li>
@@ -120,9 +207,78 @@ const SidebarContent = props => {
                 </Link>
               </li>
             }
+            {
+              serviceList.map((item, index) => {
+                <li>
+                  <Link to="/app/store24h/servicesBuys" className="">
+                    <AccountBox sx={{ marginRight: '8px' }}/>
+                    <span>{props.t("Serviços Comprados")}</span>
+                  </Link>
+                </li>
+              })
+            }
           </ul>
         </div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
+          Lista de Serviços
+        </div>
+        {
+          serviceList.map((item, index) => (
+            <div
+              key={index}
+              style={{ display: 'flex', width: '14.7rem', height: '3.3rem', background: '#d3d3d3', marginLeft: '0.5rem', marginBottom: '0.5rem', alignItems: 'center', borderRadius: '10px', cursor: 'pointer' }}
+            >
+              <div style={{ marginLeft: '1rem'}}>
+                <img src={getImg(item.alias)} alt="naadad" style={{ width: '1.5rem', height: '1.5rem'}}/>
+              </div>
+              <div
+                style={{ display: 'flex', width: '100%', height: '100%', justifyContent: 'space-between', alignContent: 'center', marginLeft: '0.5rem', alignItems: 'center'}}
+                onClick={() => 
+                  setIndexClick(index)
+                }
+              >
+                <p style={{ margin: 0, color: 'black'}}> {item.name}</p>
+                {
+                  indexClick == index ?
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{
+                        mr: 1,
+                        fontSize: '12px'
+                      }}
+                      onClick={() => 
+                        compraServico(item.id, item.alias)
+                      }
+                    >
+                      {
+                        loading ?
+                          <CircularProgress
+                            size={23}
+                          />
+                        :
+                          'Comprar'
+                      }
+                    </Button>
+                  :
+                    <p style={{ marginRight: '0.5rem', marginBottom: 0, color: 'black'}}> {formatPrice(item.price)}</p>
+                }
+              </div>
+            </div>
+          ))
+        }
       </SimpleBar>
+      <Snackbar
+          open={openSnackBar}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackBar}
+          anchorOrigin={{ vertical, horizontal }}
+          key={vertical + horizontal}
+      >
+          <Alert onClose={handleCloseSnackBar} severity={errorApi ? "error" : "success"} sx={{ width: '100%' }}>
+            { errorApi ? errorMsg : `Sua compra foi Realizada com Sucesso!`}
+          </Alert>
+      </Snackbar>
     </React.Fragment>
   )
 }
