@@ -51,7 +51,7 @@ const ListBuyServices = props => {
     const [state, setState] = useState({
       openSnackBar: false,
       vertical: 'bottom',
-      horizontal: 'left',
+      horizontal: 'center',
     });
 
     const { vertical, horizontal, openSnackBar } = state;
@@ -95,18 +95,18 @@ const ListBuyServices = props => {
               setErrorMsg("Não tem números disponíveis para este serviço no momento!");
             }
             setErrorApi(true);
-            handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
+            handleClickSnackBar({vertical: 'bottom', horizontal: 'center' });
             setLoading(false);
             return;
           }
           setOpen(false);
-          handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
+          handleClickSnackBar({vertical: 'bottom', horizontal: 'center' });
           setLoading(false);
     
         } catch(e) {
           console.log("compraServico", e);
           setErrorApi(true);
-          handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
+          handleClickSnackBar({vertical: 'bottom', horizontal: 'center' });
           setLoading(false);
         }
     }

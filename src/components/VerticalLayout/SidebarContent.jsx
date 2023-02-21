@@ -21,6 +21,8 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import AuthContext from "../../Context/auth";
 import { CircularProgress } from "@mui/material"
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -33,10 +35,12 @@ const SidebarContent = props => {
   const [serviceList, setServiceList] = useState([]);
   const [indexClick, setIndexClick] = useState(-1);
   const { token } = useContext(AuthContext);
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingServices, setLoadingServices] = useState(true);
   const [itemPer, setItemPer] = useState({});
+  //Search
+  const [searchText, setSearchText] = useState('');
+  const [serviceFilter, setServiceFilter] = useState([]);
   //error api
   const [errorApi, setErrorApi] = useState(false);
   const [errorMsg, setErrorMsg] = useState('Ops, algo deu errado tente novamente!');
@@ -46,8 +50,8 @@ const SidebarContent = props => {
   //SnackBar
   const [state, setState] = useState({
     openSnackBar: false,
-    vertical: 'bottom',
-    horizontal: 'left',
+    vertical: 'top',
+    horizontal: 'center',
   });
 
   const { vertical, horizontal, openSnackBar } = state;
@@ -75,6 +79,10 @@ const SidebarContent = props => {
   }, [props.location.pathname])
 
   useEffect(() => {
+    searchService(searchText);
+  }, [searchText])
+
+  useEffect(() => {
     ref.current.recalculate()
   })
 
@@ -92,25 +100,34 @@ const SidebarContent = props => {
         setLoading(true);
         setErrorApi(false);
         const response = await apiAxios.post(`/user/apiServicos/comprarServico/${id}`, { "serviceName": serviceName }, { headers: { 'Authorization' : `Bearer ${token}`}});
-        if(response.data == "NO_NUMBERS" || response.data == "NO_BALANCE") {
+        const badResponse = ["NO_NUMBERS", "NO_BALANCE", "BAD_KEY"];
+        if(badResponse.includes(response.data)) {
           if(response.data == "NO_NUMBERS") {
             setErrorMsg("Não tem números disponíveis para este serviço no momento!");
+          } else if(response.data == "NO_BALANCE") {
+            setErrorMsg("Sua conta não tem mais crédito!");
+          } else {
+            setErrorMsg("Sua chave de api esta errada!");
           }
           setErrorApi(true);
-          handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
+          handleClickSnackBar({vertical: 'top', horizontal: 'center' });
           setLoading(false);
           return;
         }
-        setOpen(false);
-        handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
+        handleClickSnackBar({vertical: 'top', horizontal: 'center' });
         setLoading(false);
   
       } catch(e) {
         console.log("compraServico", e);
         setErrorApi(true);
-        handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
+        handleClickSnackBar({vertical: 'top', horizontal: 'center' });
         setLoading(false);
       }
+  }
+
+  function searchService(textoDigitado) {
+      const serviceFilter = serviceList.filter( e => e.name.toLowerCase().includes(textoDigitado.toLowerCase()));
+      setServiceFilter(serviceFilter);
   }
 
   function scrollElement(item) {
@@ -205,65 +222,138 @@ const SidebarContent = props => {
                 </Link>
               </li>
             }
-            {
-              serviceList.map((item, index) => {
-                <li>
-                  <Link to="/app/store24h/servicesBuys" className="">
-                    <AccountBox sx={{ marginRight: '8px' }}/>
-                    <span>{props.t("Serviços Comprados")}</span>
-                  </Link>
-                </li>
-              })
-            }
           </ul>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
           Lista de Serviços
         </div>
+        <Box
+          component="form"
+          sx={{
+            '& > :not(style)': { m: 1, width: '29ch' },
+          }}
+          noValidate
+          autoComplete="off"
+        >
+            <TextField
+              id="outlined-basic"
+              label=""
+              placeholder="Pesquisar"
+              variant="outlined"
+              size="small"
+              onChange={e => setSearchText(e.target.value)}
+              sx={{
+                backgroundColor: '#fff',
+                borderRadius: '5px',
+                '& label.Mui-focused': {
+                  color: '#000',
+                },
+                '& .MuiInput-underline:after': {
+                  borderBottomColor: '#000',
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#000',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#000',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#000',
+                  },
+                },
+              }}
+            />
+        </Box>
         {
-          serviceList.map((item, index) => (
-            <div
-              key={index}
-              style={{ display: 'flex', width: '14.7rem', height: '3.3rem', background: '#d3d3d3', marginLeft: '0.5rem', marginBottom: '0.5rem', alignItems: 'center', borderRadius: '10px', cursor: 'pointer' }}
-            >
-              <div style={{ marginLeft: '1rem'}}>
-                <img src={getImg(item.alias)} alt="naadad" style={{ width: '1.5rem', height: '1.5rem'}}/>
-              </div>
+          searchText.length > 0 ?
+            serviceFilter.map((item, index) => (
               <div
-                style={{ display: 'flex', width: '100%', height: '100%', justifyContent: 'space-between', alignContent: 'center', marginLeft: '0.5rem', alignItems: 'center'}}
-                onClick={() => 
-                  setIndexClick(index)
-                }
+                key={index}
+                style={{ display: 'flex', width: '14.7rem', height: '3.3rem', background: '#d3d3d3', marginLeft: '0.5rem', marginBottom: '0.5rem', alignItems: 'center', borderRadius: '10px', cursor: 'pointer' }}
               >
-                <p style={{ margin: 0, color: 'black'}}> {item.name}</p>
-                {
-                  indexClick == index ?
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        mr: 1,
-                        fontSize: '12px'
-                      }}
-                      onClick={() => 
-                        compraServico(item.id, item.alias)
-                      }
-                    >
-                      {
-                        loading ?
-                          <CircularProgress
-                            size={23}
-                          />
-                        :
-                          'Comprar'
-                      }
-                    </Button>
-                  :
-                    <p style={{ marginRight: '0.5rem', marginBottom: 0, color: 'black'}}> {formatPrice(item.price)}</p>
-                }
+                <div style={{ marginLeft: '1rem'}}>
+                  <img src={getImg(item.alias)} alt="naadad" style={{ width: '1.5rem', height: '1.5rem'}}/>
+                </div>
+                <div
+                  style={{ display: 'flex', width: '100%', height: '100%', justifyContent: 'space-between', alignContent: 'center', marginLeft: '0.5rem', alignItems: 'center'}}
+                  onClick={() => 
+                    setIndexClick(index)
+                  }
+                >
+                  <p style={{ margin: 0, color: 'black'}}> {item.name}</p>
+                  {
+                    indexClick == index ?
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                          mr: 1,
+                          fontSize: '12px'
+                        }}
+                        onClick={() => 
+                          compraServico(item.id, item.alias)
+                        }
+                      >
+                        {
+                          loading ?
+                            <CircularProgress
+                              size={23}
+                            />
+                          :
+                            'Comprar'
+                        }
+                      </Button>
+                    :
+                      <p style={{ marginRight: '0.5rem', marginBottom: 0, color: 'black'}}> {formatPrice(item.price)}</p>
+                  }
+                </div>
               </div>
-            </div>
-          ))
+            ))
+          :
+            serviceList.map((item, index) => (
+              <div
+                key={index}
+                style={{ display: 'flex', width: '14.7rem', height: '3.3rem', background: '#d3d3d3', marginLeft: '0.5rem', marginBottom: '0.5rem', alignItems: 'center', borderRadius: '10px', cursor: 'pointer' }}
+              >
+                <div style={{ marginLeft: '1rem'}}>
+                  <img src={getImg(item.alias)} alt="naadad" style={{ width: '1.5rem', height: '1.5rem'}}/>
+                </div>
+                <div
+                  style={{ display: 'flex', width: '100%', height: '100%', justifyContent: 'space-between', alignContent: 'center', marginLeft: '0.5rem', alignItems: 'center'}}
+                  onClick={() => 
+                    setIndexClick(index)
+                  }
+                >
+                  <p style={{ margin: 0, color: 'black'}}> {item.name}</p>
+                  {
+                    indexClick == index ?
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                          mr: 1,
+                          fontSize: '12px'
+                        }}
+                        onClick={() => 
+                          compraServico(item.id, item.alias)
+                        }
+                      >
+                        {
+                          loading ?
+                            <CircularProgress
+                              size={23}
+                            />
+                          :
+                            'Comprar'
+                        }
+                      </Button>
+                    :
+                      <p style={{ marginRight: '0.5rem', marginBottom: 0, color: 'black'}}> {formatPrice(item.price)}</p>
+                  }
+                </div>
+              </div>
+            ))
         }
       </SimpleBar>
       <Snackbar

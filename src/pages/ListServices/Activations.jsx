@@ -42,24 +42,31 @@ const Activations = props => {
     const [lengthList, setLengthList] = useState(0);
     //Cancel
     const [indexCancel, setIndexCancel] = useState(-1);
-    const [errorMsgCancel, setErrorMsgCancel] = useState('Ops, algo deu errado tente novamente!');
     const [loadingCancel, setLoadingCancel] = useState(false);
-    const [errorApiCancel, setErrorApiCancel] = useState(false);
+    //Conclude
+    const [indexConclude, setIndexConclude] = useState(-1);
+    const [loadingConclude, setLoadingConclude] = useState(false);
+    //ErrorApi
+    const [errorMsg, setErrorMsgApi] = useState('Ops, algo deu errado tente novamente!');
+    const [errorApi, setErrorApi] = useState(false);
     
     //SnackBar
     const [state, setState] = useState({
         openSnackBar: false,
-        vertical: 'bottom',
-        horizontal: 'left',
+        vertical: 'top',
+        horizontal: 'center',
     });
 
     const { vertical, horizontal, openSnackBar } = state;
 
 
     useEffect(() => {
-      user();
-      setInterval(user, 15000);
+      setInterval(user, 10000);
     }, [])
+
+    useEffect(() => {
+        user();
+    }, [smsList])
   
     async function user() {
         try {
@@ -86,17 +93,39 @@ const Activations = props => {
         try {
             setIndexCancel(index);
             setLoadingCancel(true);
-            setErrorApiCancel(false);
+            setErrorApi(false);
             const token = await getTokenAsyncStorage();
             await apiAxios.post(`/user/apiServicos/cancel/activation/${id}`, {}, { headers: { 'Authorization' : `Bearer ${token}`}});
             await user();
+            setErrorMsgApi("Ativação cancelada!");
             setLoadingCancel(false);
-            handleClickSnackBar({vertical: 'bottom', horizontal: 'left'});
+            handleClickSnackBar({vertical: 'top', horizontal: 'center'});
 
         } catch(e) {
-            setErrorApiCancel(true);
+            setErrorMsgApi("Ops, algo deu errado tente novamente!");
+            setErrorApi(true);
             setLoadingCancel(false);
-            handleClickSnackBar({vertical: 'bottom', horizontal: 'left' });
+            handleClickSnackBar({vertical: 'top', horizontal: 'center' });
+        }
+    }
+
+    async function concludeActivation(id, index) {
+        try {
+            setIndexConclude(index);
+            setLoadingConclude(true);
+            setErrorApi(false);
+            const token = await getTokenAsyncStorage();
+            await apiAxios.post(`/user/apiServicos/conclude/activation/${id}`, {}, { headers: { 'Authorization' : `Bearer ${token}`}});
+            await user();
+            setErrorMsgApi("Ativação concluida!");
+            setLoadingConclude(false);
+            handleClickSnackBar({vertical: 'top', horizontal: 'center'});
+
+        } catch(e) {
+            setErrorMsgApi("Ops, algo deu errado tente novamente!");
+            setErrorApi(true);
+            setLoadingConclude(false);
+            handleClickSnackBar({vertical: 'top', horizontal: 'center' });
         }
     }
 
@@ -190,20 +219,28 @@ const Activations = props => {
                                                         </Button>
                                                 :
                                                     <>
-                                                    <Button
-                                                        variant="contained"
-                                                        color="success"
-                                                        sx={{ ml: 1, mt: 1 }}
-                                                    >
-                                                        <CheckIcon />
-                                                    </Button>
-                                                    <Button
-                                                        variant="contained"
-                                                        color="primary"
-                                                        sx={{ ml: 1, mt: 1 }}
-                                                    >
-                                                        <ReplayIcon />
-                                                    </Button>
+                                                        {
+                                                            loadingConclude && index == indexConclude ?
+                                                                <CircularProgress size={30} color="primary"/>
+                                                            :   
+                                                                <>
+                                                                    <Button
+                                                                        variant="contained"
+                                                                        color="success"
+                                                                        sx={{ ml: 1, mt: 1 }}
+                                                                        onClick={() => concludeActivation(smsDTO.idActivation, index)}
+                                                                    >
+                                                                        <CheckIcon />
+                                                                    </Button>
+                                                                    <Button
+                                                                        variant="contained"
+                                                                        color="primary"
+                                                                        sx={{ ml: 1, mt: 1 }}
+                                                                    >
+                                                                        <ReplayIcon />
+                                                                    </Button>
+                                                                </>
+                                                        }
                                                     </>
                                             }
                                         </TableCell>
@@ -222,8 +259,8 @@ const Activations = props => {
                 anchorOrigin={{ vertical, horizontal }}
                 key={vertical + horizontal}
             >
-                <Alert onClose={handleCloseSnackBar} severity={errorApiCancel ? "error" : "success"} sx={{ width: '100%' }}>
-                    { errorApiCancel ? errorMsgCancel : `Cancelamento efetuado com sucesso!`}
+                <Alert onClose={handleCloseSnackBar} severity={errorApi ? "error" : "success"} sx={{ width: '100%' }}>
+                    { errorMsg }
                 </Alert>
             </Snackbar>
         </React.Fragment>
