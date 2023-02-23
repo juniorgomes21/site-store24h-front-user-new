@@ -88,7 +88,7 @@ const SidebarContent = props => {
 
   async function getService() {
     try {
-      const response = await apiAxios.get(`/user/apiServicos/getAllServices`);
+      const response = await apiAxios.get(`/user/apiServicos/getAllServicesNoActivity`);
       setServiceList(response.data);
     } catch(e) {
       setLoadingServices(false);

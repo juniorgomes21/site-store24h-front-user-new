@@ -23,11 +23,13 @@ import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import ListServices from "../pages/ListServices/ListServices";
 import ServicesBuys from "../pages/ServicesBuys/ServicesBuys";
 import Messages from "../pages/Messages/Messages";
+import ActivityService from "../pages/ActivityService/ActivityService";
 
 const authProtectedRoutes = [
   { path: "/app/store24h/apiConfig", component: ChangePassword},
   { path: "/app/store24h/services", component: ListServices},
   { path: "/app/store24h/servicesBuys", component: ServicesBuys },
+  { path: "/app/store24h/activityService", component: ActivityService },
 
   { path: "/", exact: true, component: () => <Redirect to="/app/store24h/services" /> },
 ];
