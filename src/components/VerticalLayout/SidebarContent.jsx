@@ -95,11 +95,12 @@ const SidebarContent = props => {
     }
   }
 
-  async function compraServico(id, serviceName) {
+  async function compraServico(serviceName) {
     try {
         setLoading(true);
         setErrorApi(false);
-        const response = await apiAxios.post(`/user/apiServicos/comprarServico/${id}`, { "serviceName": serviceName }, { headers: { 'Authorization' : `Bearer ${token}`}});
+        console.log(serviceName, "------------");
+        const response = await apiAxios.post(`/user/apiServicos/comprarServico`, { "aliasService": serviceName }, { headers: { 'Authorization' : `Bearer ${token}`}});
         const badResponse = ["NO_NUMBERS", "NO_BALANCE", "BAD_KEY"];
         if(badResponse.includes(response.data)) {
           if(response.data == "NO_NUMBERS") {
@@ -292,7 +293,7 @@ const SidebarContent = props => {
                           fontSize: '12px'
                         }}
                         onClick={() => 
-                          compraServico(item.id, item.alias)
+                          compraServico(item.alias)
                         }
                       >
                         {
@@ -336,7 +337,7 @@ const SidebarContent = props => {
                           fontSize: '12px'
                         }}
                         onClick={() => 
-                          compraServico(item.id, item.alias)
+                          compraServico(item.alias)
                         }
                       >
                         {
