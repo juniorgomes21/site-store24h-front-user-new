@@ -99,7 +99,6 @@ const SidebarContent = props => {
     try {
         setLoading(true);
         setErrorApi(false);
-        console.log(serviceName, "------------");
         const response = await apiAxios.post(`/user/apiServicos/comprarServico`, { "aliasService": serviceName }, { headers: { 'Authorization' : `Bearer ${token}`}});
         const badResponse = ["NO_NUMBERS", "NO_BALANCE", "BAD_KEY"];
         if(badResponse.includes(response.data)) {

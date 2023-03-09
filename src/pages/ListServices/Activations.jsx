@@ -46,6 +46,9 @@ const Activations = props => {
     //Conclude
     const [indexConclude, setIndexConclude] = useState(-1);
     const [loadingConclude, setLoadingConclude] = useState(false);
+    //Retry
+    const [indexRetry, setIndexRetry] = useState(-1);
+    const [loadingRetry, setLoadingRetry] = useState(false);
     //ErrorApi
     const [errorMsg, setErrorMsgApi] = useState('Ops, algo deu errado tente novamente!');
     const [errorApi, setErrorApi] = useState(false);
@@ -61,12 +64,13 @@ const Activations = props => {
 
 
     useEffect(() => {
-      setInterval(user, 10000);
+        user();
+        setInterval(user, 10000);
     }, [])
 
-    useEffect(() => {
-        user();
-    }, [smsList])
+    // useEffect(() => {
+    //     user();
+    // }, [smsList])
   
     async function user() {
         try {
@@ -78,13 +82,13 @@ const Activations = props => {
                 setLoading(false);
             } else {
                 if(listActivations.length > smsList.length) {
-                setSmsList(listActivations);
-                setLengthList(lengthList + 1);
+                    
+                    setSmsList(listActivations);
+                    setLengthList(lengthList + 1);
                 }
                 setLoading(false);
             }
         } catch(e) {
-            console.log(e);
             setLoading(false);
         }
     }
@@ -126,6 +130,28 @@ const Activations = props => {
             setErrorApi(true);
             setLoadingConclude(false);
             handleClickSnackBar({vertical: 'top', horizontal: 'center' });
+        }
+    }
+    
+    async function retrySmsActivation(id, index) {
+        try {
+            setIndexConclude(index);
+            setIndexConclude(true);
+            setErrorApi(false);
+            const token = await getTokenAsyncStorage();
+            const respose = await apiAxios.post(`/user/apiServicos/retrysms/${id}`, {}, { headers: { 'Authorization' : `Bearer ${token}`}});
+            if(respose.data != "ACCESS_RETRY_GET") {
+                setErrorApi(true);
+                setIndexConclude(false);
+                handleClickSnackBar({vertical: 'top', horizontal: 'center'});
+            }
+            await user();
+            setErrorMsgApi("Reenvie o sms!");
+            setIndexConclude(false);
+            handleClickSnackBar({vertical: 'top', horizontal: 'center'});
+
+        } catch(e) {
+            console.log(e);
         }
     }
 
@@ -201,12 +227,12 @@ const Activations = props => {
                                         </TableCell>
                                         <TableCell align="center">
                                             {
-                                                smsDTO.min == -1 ? "Concluído" : smsDTO.min + " min"
+                                                smsDTO.min == "-1" ? "Concluído" : smsDTO.min + " min"
                                             }
                                         </TableCell>
                                         <TableCell align="center">
                                             {
-                                                smsDTO.smsList.length == 0 ?
+                                                smsDTO.min != "-1" ?
                                                     loadingCancel && index == indexCancel ?
                                                         <CircularProgress size={30} color="error"/>
                                                     :
@@ -236,6 +262,7 @@ const Activations = props => {
                                                                         variant="contained"
                                                                         color="primary"
                                                                         sx={{ ml: 1, mt: 1 }}
+                                                                        onClick={() => retrySmsActivation(smsDTO.idActivation, index)}
                                                                     >
                                                                         <ReplayIcon />
                                                                     </Button>

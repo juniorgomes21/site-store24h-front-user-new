@@ -6,6 +6,9 @@ import {
 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb";
+import InsertEmoticonOutlinedIcon from '@mui/icons-material/InsertEmoticonOutlined';
+import SentimentDissatisfiedOutlinedIcon from '@mui/icons-material/SentimentDissatisfiedOutlined';
+import SentimentNeutralIcon from '@mui/icons-material/SentimentNeutral';
 
 //i18n
 import { withTranslation } from "react-i18next";
@@ -22,7 +25,7 @@ import Paper from '@mui/material/Paper';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { async } from 'regenerator-runtime';
-import { formatarDataDia, maskCell } from '../../Validation&Formatation/formatation';
+import { formatarDataDia, formatarDataHora, maskCell, maskMoney } from '../../Validation&Formatation/formatation';
 import apiAxios from "../../services/axiosApi";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -73,6 +76,41 @@ const ServicesBuys = props => {
         }
     }
 
+    function formatDate(date) {
+
+        const datex = formatarDataDia(date);
+        const horus = formatarDataHora(date);
+
+        return ( datex + " " + horus);
+    }
+
+    function StatusEmoji(status) {
+        if(status == "-1" || status == "1" || status == "3") {
+            return ( //neutro
+                <SentimentNeutralIcon
+                    sx={{
+                        color: "blue"
+                    }}
+                />
+            )
+        } else if(status == "6" || status == "7") {
+            return( //neutro
+                <InsertEmoticonOutlinedIcon
+                    sx={{
+                        color: "green"
+                    }}
+                />
+            )
+        } else {
+            return( //triste
+                <SentimentDissatisfiedOutlinedIcon
+                    sx={{
+                        color: "red"
+                    }}
+                />
+            )
+        }
+    }
 
     return (
         <React.Fragment>
@@ -88,9 +126,13 @@ const ServicesBuys = props => {
                     <Table sx={{ minWidth: 700 }} aria-label="customized table">
                         <TableHead>
                         <TableRow>
-                            <StyledTableCell align="center">Serviço comprado</StyledTableCell>
-                            <StyledTableCell align="center">Número alugado</StyledTableCell>
+                            <StyledTableCell align="center">#</StyledTableCell>
                             <StyledTableCell align="center">Dia da compra</StyledTableCell>
+                            <StyledTableCell align="center">Service</StyledTableCell>
+                            <StyledTableCell align="center">Número alugado</StyledTableCell>
+                            <StyledTableCell align="center">SMS</StyledTableCell>
+                            <StyledTableCell align="center">Custo</StyledTableCell>
+                            <StyledTableCell align="center">Status</StyledTableCell>
                         </TableRow>
                         </TableHead>
                         <TableBody>
@@ -101,9 +143,19 @@ const ServicesBuys = props => {
 
                                 listServicos.map((row, index) => (
                                     <StyledTableRow key={index}>
-                                        <StyledTableCell align="center">{row.servico}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.idActivation}</StyledTableCell>
+                                        <StyledTableCell align="center">{formatDate(row.localDateTime)}</StyledTableCell>
+                                        <StyledTableCell align="center">
+                                            <img style={{ width: '2rem', height: '2rem' }} src={`/img/servicesImg/${row.aliasService}0.png`} alt="..." />
+                                        </StyledTableCell>
                                         <StyledTableCell align="center">{maskCell(row.number)}</StyledTableCell>
-                                        <StyledTableCell align="center">{formatarDataDia(row.localDateTime)}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.sms}</StyledTableCell>
+                                        <StyledTableCell align="center">{maskMoney(row.cost ? row.cost : 0)}</StyledTableCell>
+                                        <StyledTableCell align="center">
+                                            {
+                                                StatusEmoji(row.status)
+                                            }
+                                        </StyledTableCell>
                                     </StyledTableRow>
                                 ))
                             }
