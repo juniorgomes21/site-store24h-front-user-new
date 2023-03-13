@@ -44,10 +44,10 @@ export function formatarDataHora(data) {
     if(hora < 9) hora = '0' + hora;
 
     if ( hora <= 12 ) {
-        return (hora + ':' + min + ' AM')
+        return (hora + ':' + min)
     }
 
-    return (hora + ':' + min + ' PM')
+    return (hora + ':' + min)
 }
 
 export function maskCell(num) {

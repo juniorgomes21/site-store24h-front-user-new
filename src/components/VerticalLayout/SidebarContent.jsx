@@ -114,6 +114,7 @@ const SidebarContent = props => {
           setLoading(false);
           return;
         }
+        await getService();
         handleClickSnackBar({vertical: 'top', horizontal: 'center' });
         setLoading(false);
   
@@ -281,7 +282,7 @@ const SidebarContent = props => {
                     setIndexClick(index)
                   }
                 >
-                  <p style={{ margin: 0, color: 'black'}}> {item.name}</p>
+                  <p style={{ margin: 0, color: 'black'}}> {item.name} {item.totalQuantity}</p>
                   {
                     indexClick == index ?
                       <Button
@@ -325,13 +326,15 @@ const SidebarContent = props => {
                     setIndexClick(index)
                   }
                 >
-                  <p style={{ margin: 0, color: 'black'}}> {item.name}</p>
+                  <p style={{ margin: 0, color: 'black', fontSize: '12px'}}> {item.name}</p>
+                  <p style={{display: 'flex', justifyContent: 'flex-end', margin: 0, color: 'black', fontSize: '10px', width: '90%'}}>{item.totalQuantity} pcs.</p>
                   {
                     indexClick == index ?
                       <Button
                         variant="outlined"
                         size="small"
                         sx={{
+                          ml: 1,
                           mr: 1,
                           fontSize: '12px'
                         }}
@@ -349,7 +352,7 @@ const SidebarContent = props => {
                         }
                       </Button>
                     :
-                      <p style={{ marginRight: '0.5rem', marginBottom: 0, color: 'black'}}> {formatPrice(item.price)}</p>
+                      <p style={{display: 'flex', justifyContent: 'flex-end', marginRight: '0.5rem', marginBottom: 0, color: 'black', width: '70%'}}> {formatPrice(item.price)}</p>
                   }
                 </div>
               </div>

@@ -227,12 +227,12 @@ const Activations = props => {
                                         </TableCell>
                                         <TableCell align="center">
                                             {
-                                                smsDTO.min == "-1" ? "Concluído" : smsDTO.min + " min"
+                                                smsDTO.min + " min"
                                             }
                                         </TableCell>
                                         <TableCell align="center">
                                             {
-                                                smsDTO.min != "-1" ?
+                                                !smsDTO.finalized && smsDTO.retry == false ?
                                                     loadingCancel && index == indexCancel ?
                                                         <CircularProgress size={30} color="error"/>
                                                     :
@@ -258,14 +258,16 @@ const Activations = props => {
                                                                     >
                                                                         <CheckIcon />
                                                                     </Button>
-                                                                    <Button
-                                                                        variant="contained"
-                                                                        color="primary"
-                                                                        sx={{ ml: 1, mt: 1 }}
-                                                                        onClick={() => retrySmsActivation(smsDTO.idActivation, index)}
-                                                                    >
-                                                                        <ReplayIcon />
-                                                                    </Button>
+                                                                    {smsDTO.retry != true &&
+                                                                        <Button
+                                                                            variant="contained"
+                                                                            color="primary"
+                                                                            sx={{ ml: 1, mt: 1 }}
+                                                                            onClick={() => retrySmsActivation(smsDTO.idActivation, index)}
+                                                                        >
+                                                                            <ReplayIcon />
+                                                                        </Button>
+                                                                    }
                                                                 </>
                                                         }
                                                     </>
