@@ -71,6 +71,44 @@ export async function removeActivationsNumbersAsyncStorage() {
     }
 }
 
+//Lista de serviços
+export async function setListServicesAsyncStorage(accessList) {
+    try {
+        await AsyncStorage.setItem('@ListServices', JSON.stringify(accessList));
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export async function getListServicesAsyncStorage() {
+    try {
+        const ListBuyServicesAsync = await AsyncStorage.getItem('@ListServices');
+        if (ListBuyServicesAsync) {
+
+            const ListBuyServices = JSON.parse(ListBuyServicesAsync);
+
+            return ListBuyServices;
+        }
+
+        return null;
+
+    } catch (e) {
+        console.log(e);
+        return 'deu errado no get';
+    }
+}
+
+export async function removeListServicesAsyncStorage() {
+    try {
+        await AsyncStorage.removeItem('@ListServices');
+        console.log("deu certo async");
+        
+    } catch (e) {
+        console.log("deu error async");
+
+    }
+}
+
 //Lista de serviços comprados
 export async function setListBuyServicesAsyncStorage(accessList) {
     try {

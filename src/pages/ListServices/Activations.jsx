@@ -258,7 +258,7 @@ const Activations = props => {
                                                                     >
                                                                         <CheckIcon />
                                                                     </Button>
-                                                                    {smsDTO.retry != true &&
+                                                                    {smsDTO.awaitSms == false &&
                                                                         <Button
                                                                             variant="contained"
                                                                             color="primary"

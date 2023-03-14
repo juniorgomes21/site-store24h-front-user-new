@@ -23,6 +23,7 @@ import AuthContext from "../../Context/auth";
 import { CircularProgress } from "@mui/material"
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import { getListServicesAsyncStorage, setListServicesAsyncStorage } from "../../isValidToken/isValidToken";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -88,8 +89,11 @@ const SidebarContent = props => {
 
   async function getService() {
     try {
+      const list = await getListServicesAsyncStorage()
+      setServiceList(list);
       const response = await apiAxios.get(`/user/apiServicos/getAllServicesNoActivity`);
       setServiceList(response.data);
+      setListServicesAsyncStorage(response.data)
     } catch(e) {
       setLoadingServices(false);
     }
@@ -114,12 +118,14 @@ const SidebarContent = props => {
           setLoading(false);
           return;
         }
-        await getService();
+        
+        if(window.location.href != "https://digitalapc.xyz/app/store24h/services") {
+          window.location = "https://digitalapc.xyz/app/store24h/services";
+        }
         handleClickSnackBar({vertical: 'top', horizontal: 'center' });
         setLoading(false);
   
       } catch(e) {
-        console.log("compraServico", e);
         setErrorApi(true);
         handleClickSnackBar({vertical: 'top', horizontal: 'center' });
         setLoading(false);
