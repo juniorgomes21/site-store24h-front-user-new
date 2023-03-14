@@ -248,7 +248,10 @@ const SidebarContent = props => {
               placeholder="Pesquisar"
               variant="outlined"
               size="small"
-              onChange={e => setSearchText(e.target.value)}
+              onChange={e => {
+                setSearchText(e.target.value);
+                setIndexClick(-1);
+              }}
               sx={{
                 backgroundColor: '#fff',
                 borderRadius: '5px',
@@ -277,26 +280,74 @@ const SidebarContent = props => {
             serviceFilter.map((item, index) => (
               <div
                 key={index}
-                style={{ display: 'flex', width: '14.7rem', height: '3.3rem', background: '#d3d3d3', marginLeft: '0.5rem', marginBottom: '0.5rem', alignItems: 'center', borderRadius: '10px', cursor: 'pointer' }}
+                style={{
+                  display: 'flex',
+                  width: '14.8rem',
+                  height: '3.3rem',
+                  background: '#d3d3d3',
+                  marginLeft: '0.35rem',
+                  marginBottom: '0.5rem',
+                  alignItems: 'center',
+                  borderRadius: '10px',
+                  cursor: 'pointer'
+                }}
               >
-                <div style={{ marginLeft: '1rem'}}>
-                  <img src={getImg(item.alias)} alt="naadad" style={{ width: '1.5rem', height: '1.5rem'}}/>
+                <div style={{ marginLeft: '0.2rem'}}>
+                  <img src={getImg(item.alias)} alt="ndad" style={{ width: '1.5rem', height: '1.5rem'}}/>
                 </div>
                 <div
-                  style={{ display: 'flex', width: '100%', height: '100%', justifyContent: 'space-between', alignContent: 'center', marginLeft: '0.5rem', alignItems: 'center'}}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    height: '100%',
+                    alignContent: 'center',
+                    marginLeft: '0.3rem',
+                    alignItems: 'center'
+                  }}
                   onClick={() => 
                     setIndexClick(index)
                   }
                 >
-                  <p style={{ margin: 0, color: 'black'}}> {item.name} {item.totalQuantity}</p>
+                  <p
+                    style={{
+                      margin: 0,
+                      color: 'black',
+                      fontSize: '12px',
+                      minWidth: '87px',
+                      maxWidth: '88px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}
+                  >
+                    {item.name}
+                  </p>
+                  {
+                    indexClick != index && 
+                      <p
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'flex-end',
+                          margin: 0,
+                          color: 'black',
+                          fontSize: '10px',
+                          minWidth: '52px',
+                          maxWidth: '80px'
+                          }}
+                      >
+                          {item.totalQuantity} pcs.
+                      </p>
+                  }
                   {
                     indexClick == index ?
+                    <div>
                       <Button
                         variant="outlined"
                         size="small"
                         sx={{
-                          mr: 1,
-                          fontSize: '12px'
+                          ml: 0.5,
+                          mr: 0.8,
+                          fontSize: '12px',
                         }}
                         onClick={() => 
                           compraServico(item.alias)
@@ -311,8 +362,20 @@ const SidebarContent = props => {
                             'Comprar'
                         }
                       </Button>
+                    </div>
                     :
-                      <p style={{ marginRight: '0.5rem', marginBottom: 0, color: 'black'}}> {formatPrice(item.price)}</p>
+                      <p
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'flex-end',
+                          marginRight: '0.3rem',
+                          marginBottom: 0,
+                          color: 'black',
+                          width: '4rem',
+                          fontSize: '12px'
+                        }}>
+                          {formatPrice(item.price)}
+                      </p>
                   }
                 </div>
               </div>
@@ -321,28 +384,88 @@ const SidebarContent = props => {
             serviceList.map((item, index) => (
               <div
                 key={index}
-                style={{ display: 'flex', width: '14.7rem', height: '3.3rem', background: '#d3d3d3', marginLeft: '0.5rem', marginBottom: '0.5rem', alignItems: 'center', borderRadius: '10px', cursor: 'pointer' }}
+                style={{
+                  display: 'flex',
+                  width: '14.8rem',
+                  height: '3.3rem',
+                  background: '#d3d3d3',
+                  marginLeft: '0.35rem',
+                  marginBottom: '0.5rem',
+                  alignItems: 'center',
+                  borderRadius: '10px',
+                  cursor: 'pointer'
+                }}
               >
-                <div style={{ marginLeft: '1rem'}}>
-                  <img src={getImg(item.alias)} alt="naadad" style={{ width: '1.5rem', height: '1.5rem'}}/>
+                <div style={{ marginLeft: '0.2rem'}}>
+                  <img
+                    src={getImg(item.alias)}
+                    alt="nd"
+                    style={{
+                      width: '1.5rem',
+                      height: '1.5rem',
+                      maxWidth: '1.5rem'
+                    
+                      }}
+                  />
                 </div>
                 <div
-                  style={{ display: 'flex', width: '100%', height: '100%', justifyContent: 'space-between', alignContent: 'center', marginLeft: '0.5rem', alignItems: 'center'}}
-                  onClick={() => 
-                    setIndexClick(index)
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    height: '100%',
+                    alignContent: 'center',
+                    marginLeft: '0.3rem',
+                    alignItems: 'center'
+                  }}
+                  onClick={() => {
+                    if(index == indexClick) {
+                      setIndexClick(-1);
+                    } else {
+                      setIndexClick(index)
+                    }
+                  }
                   }
                 >
-                  <p style={{ margin: 0, color: 'black', fontSize: '12px'}}> {item.name}</p>
-                  <p style={{display: 'flex', justifyContent: 'flex-end', margin: 0, color: 'black', fontSize: '10px', width: '90%'}}>{item.totalQuantity} pcs.</p>
+                  <p
+                    style={{
+                      margin: 0,
+                      color: 'black',
+                      fontSize: '12px',
+                      minWidth: '87px',
+                      maxWidth: '88px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}
+                  >
+                    {item.name}
+                  </p>
+                  {
+                    indexClick != index && 
+                      <p
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'flex-end',
+                          margin: 0,
+                          color: 'black',
+                          fontSize: '10px',
+                          minWidth: '52px',
+                          maxWidth: '80px'
+                          }}
+                      >
+                          {item.totalQuantity} pcs.
+                      </p>
+                  }
                   {
                     indexClick == index ?
+                    <div>
                       <Button
                         variant="outlined"
                         size="small"
                         sx={{
-                          ml: 1,
-                          mr: 1,
-                          fontSize: '12px'
+                          ml: 0.5,
+                          mr: 0.8,
+                          fontSize: '12px',
                         }}
                         onClick={() => 
                           compraServico(item.alias)
@@ -357,8 +480,20 @@ const SidebarContent = props => {
                             'Comprar'
                         }
                       </Button>
+                    </div>
                     :
-                      <p style={{display: 'flex', justifyContent: 'flex-end', marginRight: '0.5rem', marginBottom: 0, color: 'black', width: '70%'}}> {formatPrice(item.price)}</p>
+                      <p
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          marginRight: '0.3rem',
+                          marginBottom: 0,
+                          color: 'black',
+                          width: '4rem',
+                          fontSize: '12px'
+                        }}>
+                          {formatPrice(item.price)}
+                      </p>
                   }
                 </div>
               </div>
