@@ -7,6 +7,7 @@ import "./i18n"
 import { Provider } from "react-redux"
 import store  from "./store";
 import { AuthProvider } from "./Context/auth"
+import { ManagerServiceProvider } from "./Context/managerService"
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -14,7 +15,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
       <BrowserRouter>
         <AuthProvider>
-          <App />
+          <ManagerServiceProvider>
+            <App />
+          </ManagerServiceProvider>
         </AuthProvider>
       </BrowserRouter>
   </Provider>

@@ -24,6 +24,7 @@ import { CircularProgress } from "@mui/material"
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { getListServicesAsyncStorage, setListServicesAsyncStorage } from "../../isValidToken/isValidToken";
+import ManagerServiceContext from "../../Context/managerService"
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -31,35 +32,18 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const SidebarContent = props => {
   const { user } = useContext(AuthContext);
+  const { serviceList, compraServico } = useContext(ManagerServiceContext);
+
   const ref = useRef();
 
-  const [serviceList, setServiceList] = useState([]);
   const [indexClick, setIndexClick] = useState(-1);
-  const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const [loadingServices, setLoadingServices] = useState(true);
-  const [itemPer, setItemPer] = useState({});
   //Search
   const [searchText, setSearchText] = useState('');
   const [serviceFilter, setServiceFilter] = useState([]);
-  //error api
-  const [errorApi, setErrorApi] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('Ops, algo deu errado tente novamente!');
-  //Pagination
-  const [totalPages, setTotalPages] = useState(0);
-  const [page, setPage] = useState(0);
-  //SnackBar
-  const [state, setState] = useState({
-    openSnackBar: false,
-    vertical: 'top',
-    horizontal: 'center',
-  });
-
-  const { vertical, horizontal, openSnackBar } = state;
 
   // Use ComponentDidMount and ComponentDidUpdate method symultaniously
   useEffect(() => {
-    getService();
     const pathName = props.location.pathname
     const initMenu = () => {
       new MetisMenu("#side-menu")
@@ -86,51 +70,6 @@ const SidebarContent = props => {
   useEffect(() => {
     ref.current.recalculate()
   })
-
-  async function getService() {
-    try {
-      const list = await getListServicesAsyncStorage()
-      setServiceList(list);
-      const response = await apiAxios.get(`/user/apiServicos/getAllServicesNoActivity`);
-      setServiceList(response.data);
-      setListServicesAsyncStorage(response.data)
-    } catch(e) {
-      setLoadingServices(false);
-    }
-  }
-
-  async function compraServico(serviceName) {
-    try {
-        setLoading(true);
-        setErrorApi(false);
-        const response = await apiAxios.post(`/user/apiServicos/comprarServico`, { "aliasService": serviceName }, { headers: { 'Authorization' : `Bearer ${token}`}});
-        const badResponse = ["NO_NUMBERS", "NO_BALANCE", "BAD_KEY"];
-        if(badResponse.includes(response.data)) {
-          if(response.data == "NO_NUMBERS") {
-            setErrorMsg("Não tem números disponíveis para este serviço no momento!");
-          } else if(response.data == "NO_BALANCE") {
-            setErrorMsg("Sua conta não tem mais crédito!");
-          } else {
-            setErrorMsg("Sua chave de api esta errada!");
-          }
-          setErrorApi(true);
-          handleClickSnackBar({vertical: 'top', horizontal: 'center' });
-          setLoading(false);
-          return;
-        }
-        
-        if(window.location.href != "https://digitalapc.xyz/app/store24h/services") {
-          window.location = "https://digitalapc.xyz/app/store24h/services";
-        }
-        handleClickSnackBar({vertical: 'top', horizontal: 'center' });
-        setLoading(false);
-  
-      } catch(e) {
-        setErrorApi(true);
-        handleClickSnackBar({vertical: 'top', horizontal: 'center' });
-        setLoading(false);
-      }
-  }
 
   function searchService(textoDigitado) {
       const serviceFilter = serviceList.filter( e => e.name.toLowerCase().includes(textoDigitado.toLowerCase()));
@@ -193,14 +132,6 @@ const SidebarContent = props => {
   function getImg(name) {
     return `/img/servicesImg/${name}0.png`;
   }
-
-  function handleClickSnackBar(newState) {
-    setState({ openSnackBar: true, ...newState });
-  };
-
-  function handleCloseSnackBar() {
-    setState({ ...state, openSnackBar: false });
-  };
 
   return (
     <React.Fragment>
@@ -500,17 +431,6 @@ const SidebarContent = props => {
             ))
         }
       </SimpleBar>
-      <Snackbar
-          open={openSnackBar}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackBar}
-          anchorOrigin={{ vertical, horizontal }}
-          key={vertical + horizontal}
-      >
-          <Alert onClose={handleCloseSnackBar} severity={errorApi ? "error" : "success"} sx={{ width: '100%' }}>
-            { errorApi ? errorMsg : `Sua compra foi Realizada com Sucesso!`}
-          </Alert>
-      </Snackbar>
     </React.Fragment>
   )
 }

@@ -28,6 +28,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ReplayIcon from '@mui/icons-material/Replay';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import ManagerServiceContext from "../../Context/managerService";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -37,8 +38,9 @@ const Activations = props => {
 
     //meta title
     document.title="store24h | Lista de Serviços";
-    const [smsList, setSmsList] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const {  smsList, user } = useContext(ManagerServiceContext);
+    // const [smsList, setSmsList] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [lengthList, setLengthList] = useState(0);
     //Cancel
     const [indexCancel, setIndexCancel] = useState(-1);
@@ -62,37 +64,6 @@ const Activations = props => {
 
     const { vertical, horizontal, openSnackBar } = state;
 
-
-    useEffect(() => {
-        user();
-        setInterval(user, 10000);
-    }, [])
-
-    // useEffect(() => {
-    //     user();
-    // }, [smsList])
-  
-    async function user() {
-        try {
-            const token = await getTokenAsyncStorage();
-            const response = await apiAxios.post('/user/apiServicos/activation', { "quantityActivation": smsList.length }, { headers: { 'Authorization' : `Bearer ${token}`}});
-            const listActivations = response.data;
-            if(listActivations.length == 0) {
-                setSmsList([]);
-                setLoading(false);
-            } else {
-                if(listActivations.length > smsList.length) {
-                    
-                    setSmsList(listActivations);
-                    setLengthList(lengthList + 1);
-                }
-                setLoading(false);
-            }
-        } catch(e) {
-            setLoading(false);
-        }
-    }
-
     async function cancelActivation(id, index) {
         try {
             setIndexCancel(index);
@@ -104,9 +75,7 @@ const Activations = props => {
             setErrorMsgApi("Ativação cancelada!");
             setLoadingCancel(false);
             handleClickSnackBar({vertical: 'top', horizontal: 'center'});
-
         } catch(e) {
-            setErrorMsgApi("Ops, algo deu errado tente novamente!");
             setErrorApi(true);
             setLoadingCancel(false);
             handleClickSnackBar({vertical: 'top', horizontal: 'center' });
@@ -126,7 +95,6 @@ const Activations = props => {
             handleClickSnackBar({vertical: 'top', horizontal: 'center'});
 
         } catch(e) {
-            setErrorMsgApi("Ops, algo deu errado tente novamente!");
             setErrorApi(true);
             setLoadingConclude(false);
             handleClickSnackBar({vertical: 'top', horizontal: 'center' });
