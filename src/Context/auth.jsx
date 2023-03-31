@@ -1,5 +1,5 @@
 import 'regenerator-runtime/runtime'
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import isValidToken, { getApiKeySystemAsyncStorage, getTokenAsyncStorage, removeDateAsyncSotorage, setApiKeySystemAsyncStorage, setTokenAsyncStorage, getUserAsyncStorage, setUserAsyncStorage } from "../isValidToken/isValidToken";
 import apiAxios from '../services/axiosApi';
 
@@ -58,14 +58,15 @@ export function AuthProvider({ children }) {
           const response = await apiAxios.post('/user/auth/login/user', {"email": email, "senha": senha});
           setTokenAsyncStorage(response.data.token);
           const responseUser = await apiAxios.get("/user/userDetails", { headers: { 'Authorization' : `Bearer ${response.data.token}`}});
-          const responseApiKeySystem = await apiAxios.get('/adm/getapikeysystem');
+          const responseApiKeySystem = await apiAxios.get('/adm/getapikeysystem', { headers: { 'Authorization' : `Bearer ${response.data.token}`}});
           setApiKeySystemAsyncStorage(responseApiKeySystem.data);
           setUserAsyncStorage(responseUser.data);
           setLogado(true);
           setLoadingLogin(false);
-          window.location.href = "/app/store24h/services";
+          window.location = "/app/store24h/services";
   
         } catch (e) {
+          console.log(e);
           setLoginError(true);
           setLoadingLogin(false);
         }

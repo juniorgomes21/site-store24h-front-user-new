@@ -64,6 +64,10 @@ const SidebarContent = props => {
   }, [props.location.pathname])
 
   useEffect(() => {
+    
+  }, [serviceList])
+
+  useEffect(() => {
     searchService(searchText);
   }, [searchText])
 
@@ -207,228 +211,254 @@ const SidebarContent = props => {
             />
         </Box>
         {
-          searchText.length > 0 ?
-            serviceFilter.map((item, index) => (
-              <div
-                key={index}
-                style={{
-                  display: 'flex',
-                  width: '14.8rem',
-                  height: '3.3rem',
-                  background: '#d3d3d3',
-                  marginLeft: '0.35rem',
-                  marginBottom: '0.5rem',
-                  alignItems: 'center',
-                  borderRadius: '10px',
-                  cursor: 'pointer'
-                }}
-              >
-                <div style={{ marginLeft: '0.2rem'}}>
-                  <img src={getImg(item.alias)} alt="ndad" style={{ width: '1.5rem', height: '1.5rem'}}/>
-                </div>
+          serviceList.length > 0 ?
+            searchText.length > 0 ?
+              serviceFilter.map((item, index) => (
                 <div
+                  key={index}
                   style={{
                     display: 'flex',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                    height: '100%',
-                    alignContent: 'center',
-                    marginLeft: '0.3rem',
-                    alignItems: 'center'
+                    width: '14.8rem',
+                    height: '3.3rem',
+                    background: '#d3d3d3',
+                    marginLeft: '0.35rem',
+                    marginBottom: '0.5rem',
+                    alignItems: 'center',
+                    borderRadius: '10px',
+                    cursor: 'pointer'
                   }}
-                  onClick={() => 
-                    setIndexClick(index)
-                  }
                 >
-                  <p
-                    style={{
-                      margin: 0,
-                      color: 'black',
-                      fontSize: '12px',
-                      minWidth: '87px',
-                      maxWidth: '88px',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    }}
-                  >
-                    {item.name}
-                  </p>
-                  {
-                    indexClick != index && 
-                      <p
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'flex-end',
-                          margin: 0,
-                          color: 'black',
-                          fontSize: '10px',
-                          minWidth: '52px',
-                          maxWidth: '80px'
-                          }}
-                      >
-                          {item.totalQuantity} pcs.
-                      </p>
-                  }
-                  {
-                    indexClick == index ?
-                    <div>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        sx={{
-                          ml: 0.5,
-                          mr: 0.8,
-                          fontSize: '12px',
+                  <div style={{ marginLeft: '0.2rem'}}>
+                    <img
+                      src={getImg(item.alias)}
+                      alt="nd"
+                      style={{
+                        width: '1.5rem',
+                        height: '1.5rem',
+                        maxWidth: '1.5rem'
+                      
                         }}
-                        onClick={() => 
-                          compraServico(item.alias)
-                        }
-                      >
-                        {
-                          loading ?
-                            <CircularProgress
-                              size={23}
-                            />
-                          :
-                            'Comprar'
-                        }
-                      </Button>
-                    </div>
-                    :
-                      <p
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'flex-end',
-                          marginRight: '0.3rem',
-                          marginBottom: 0,
-                          color: 'black',
-                          width: '4rem',
-                          fontSize: '12px'
-                        }}>
-                          {formatPrice(item.price)}
-                      </p>
-                  }
-                </div>
-              </div>
-            ))
-          :
-            serviceList.map((item, index) => (
-              <div
-                key={index}
-                style={{
-                  display: 'flex',
-                  width: '14.8rem',
-                  height: '3.3rem',
-                  background: '#d3d3d3',
-                  marginLeft: '0.35rem',
-                  marginBottom: '0.5rem',
-                  alignItems: 'center',
-                  borderRadius: '10px',
-                  cursor: 'pointer'
-                }}
-              >
-                <div style={{ marginLeft: '0.2rem'}}>
-                  <img
-                    src={getImg(item.alias)}
-                    alt="nd"
+                    />
+                  </div>
+                  <div
                     style={{
-                      width: '1.5rem',
-                      height: '1.5rem',
-                      maxWidth: '1.5rem'
-                    
-                      }}
-                  />
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                    height: '100%',
-                    alignContent: 'center',
-                    marginLeft: '0.3rem',
-                    alignItems: 'center'
-                  }}
-                  onClick={() => {
-                    if(index == indexClick) {
-                      setIndexClick(-1);
-                    } else {
-                      setIndexClick(index)
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      height: '100%',
+                      alignContent: 'center',
+                      marginLeft: '0.3rem',
+                      alignItems: 'center'
+                    }}
+                    onClick={() => {
+                      if(index == indexClick) {
+                        setIndexClick(-1);
+                      } else {
+                        setIndexClick(index)
+                      }
                     }
-                  }
-                  }
-                >
-                  <p
-                    style={{
-                      margin: 0,
-                      color: 'black',
-                      fontSize: '12px',
-                      minWidth: '87px',
-                      maxWidth: '88px',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    }}
+                    }
                   >
-                    {item.name}
-                  </p>
-                  {
-                    indexClick != index && 
-                      <p
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'flex-end',
-                          margin: 0,
-                          color: 'black',
-                          fontSize: '10px',
-                          minWidth: '52px',
-                          maxWidth: '80px'
+                    <p
+                      style={{
+                        margin: 0,
+                        color: 'black',
+                        fontSize: '12px',
+                        minWidth: '87px',
+                        maxWidth: '88px',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}
+                    >
+                      {item.name}
+                    </p>
+                    {
+                      indexClick != index && 
+                        <p
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            margin: 0,
+                            color: 'black',
+                            fontSize: '10px',
+                            minWidth: '52px',
+                            maxWidth: '80px'
+                            }}
+                        >
+                            {item.totalQuantity} pcs.
+                        </p>
+                    }
+                    {
+                      indexClick == index ?
+                      <div>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          sx={{
+                            ml: 0.5,
+                            mr: 0.8,
+                            fontSize: '12px',
                           }}
-                      >
-                          {item.totalQuantity} pcs.
-                      </p>
-                  }
-                  {
-                    indexClick == index ?
-                    <div>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        sx={{
-                          ml: 0.5,
-                          mr: 0.8,
-                          fontSize: '12px',
-                        }}
-                        onClick={() => 
-                          compraServico(item.alias)
-                        }
-                      >
-                        {
-                          loading ?
-                            <CircularProgress
-                              size={23}
-                            />
-                          :
-                            'Comprar'
-                        }
-                      </Button>
-                    </div>
-                    :
-                      <p
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          marginRight: '0.3rem',
-                          marginBottom: 0,
-                          color: 'black',
-                          width: '4rem',
-                          fontSize: '12px'
-                        }}>
-                          {formatPrice(item.price)}
-                      </p>
-                  }
+                          onClick={() => 
+                            compraServico(item.alias)
+                          }
+                        >
+                          {
+                            loading ?
+                              <CircularProgress
+                                size={23}
+                              />
+                            :
+                              'Comprar'
+                          }
+                        </Button>
+                      </div>
+                      :
+                        <p
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginRight: '0.3rem',
+                            marginBottom: 0,
+                            color: 'black',
+                            width: '4rem',
+                            fontSize: '12px'
+                          }}>
+                            {formatPrice(item.price)}
+                        </p>
+                    }
+                  </div>
                 </div>
+              ))
+            :
+              serviceList.map((item, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: 'flex',
+                    width: '14.8rem',
+                    height: '3.3rem',
+                    background: '#d3d3d3',
+                    marginLeft: '0.35rem',
+                    marginBottom: '0.5rem',
+                    alignItems: 'center',
+                    borderRadius: '10px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <div style={{ marginLeft: '0.2rem'}}>
+                    <img
+                      src={getImg(item.alias)}
+                      alt="nd"
+                      style={{
+                        width: '1.5rem',
+                        height: '1.5rem',
+                        maxWidth: '1.5rem'
+                      
+                        }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      height: '100%',
+                      alignContent: 'center',
+                      marginLeft: '0.3rem',
+                      alignItems: 'center'
+                    }}
+                    onClick={() => {
+                      if(index == indexClick) {
+                        setIndexClick(-1);
+                      } else {
+                        setIndexClick(index)
+                      }
+                    }
+                    }
+                  >
+                    <p
+                      style={{
+                        margin: 0,
+                        color: 'black',
+                        fontSize: '12px',
+                        minWidth: '87px',
+                        maxWidth: '88px',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}
+                    >
+                      {item.name}
+                    </p>
+                    {
+                      indexClick != index && 
+                        <p
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            margin: 0,
+                            color: 'black',
+                            fontSize: '10px',
+                            minWidth: '52px',
+                            maxWidth: '80px'
+                            }}
+                        >
+                            {item.totalQuantity} pcs.
+                        </p>
+                    }
+                    {
+                      indexClick == index ?
+                      <div>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          sx={{
+                            ml: 0.5,
+                            mr: 0.8,
+                            fontSize: '12px',
+                          }}
+                          onClick={() => 
+                            compraServico(item.alias)
+                          }
+                        >
+                          {
+                            loading ?
+                              <CircularProgress
+                                size={23}
+                              />
+                            :
+                              'Comprar'
+                          }
+                        </Button>
+                      </div>
+                      :
+                        <p
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginRight: '0.3rem',
+                            marginBottom: 0,
+                            color: 'black',
+                            width: '4rem',
+                            fontSize: '12px'
+                          }}>
+                            {formatPrice(item.price)}
+                        </p>
+                    }
+                  </div>
+                </div>
+              ))
+          :
+            <>
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 5 }}>
+                  <CircularProgress
+                    size={20}
+                    color="warning"
+                  />
               </div>
-            ))
+            </>
+
+
         }
       </SimpleBar>
     </React.Fragment>

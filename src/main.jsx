@@ -14,11 +14,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.Fragment>
     <Provider store={store}>
       <BrowserRouter>
-        <AuthProvider>
-          <ManagerServiceProvider>
-            <App />
-          </ManagerServiceProvider>
-        </AuthProvider>
+          <AuthProvider>
+            <ManagerServiceProvider>
+              <App />
+            </ManagerServiceProvider>
+          </AuthProvider>
       </BrowserRouter>
   </Provider>
   </React.Fragment>

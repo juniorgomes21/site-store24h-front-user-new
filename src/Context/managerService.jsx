@@ -53,8 +53,8 @@ export function ManagerServiceProvider({ children }) {
     //Lateral esquerda serviços
     async function getService() {
         try {
-          const list = await getUserAsyncStorage()
-          setServiceList(list);
+        //   const list = await getUserAsyncStorage()
+        //   setServiceList(list);
           const response = await apiAxios.get(`/user/apiServicos/getAllServicesNoActivity`);
           setServiceList(response.data);
           setUserAsyncStorage(response.data)
@@ -83,10 +83,10 @@ export function ManagerServiceProvider({ children }) {
             }
             
             if(window.location.href != "https://digitalapc.xyz/app/store24h/services") {
-            //   window.location = "https://digitalapc.xyz/app/store24h/services";
+              window.location = "https://digitalapc.xyz/app/store24h/services";
             }
+            getService();
             await user();
-            
             handleClickSnackBar({vertical: 'top', horizontal: 'center' });
       
         } catch(e) {
@@ -104,7 +104,7 @@ export function ManagerServiceProvider({ children }) {
     };
     
     return (
-        <ManagerServiceContext.Provider value={{ serviceList, smsList, compraServico, user }}>
+        <ManagerServiceContext.Provider value={{ serviceList, smsList, compraServico, user, getService }}>
             {children}
             <Snackbar
                 open={openSnackBar}

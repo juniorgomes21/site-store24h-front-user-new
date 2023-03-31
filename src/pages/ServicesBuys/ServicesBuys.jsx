@@ -27,6 +27,7 @@ import Stack from '@mui/material/Stack';
 import { async } from 'regenerator-runtime';
 import { formatarDataDia, formatarDataHora, maskCell, maskMoney } from '../../Validation&Formatation/formatation';
 import apiAxios from "../../services/axiosApi";
+import { getTokenAsyncStorage } from "../../isValidToken/isValidToken";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -67,7 +68,8 @@ const ServicesBuys = props => {
 
     async function getListCompras() {
         try {
-            const response = await apiAxios.get(`/user/apiServicos/getComprasFeitas?page=${page > 0 ? page - 1 : page}`);
+            const token = await getTokenAsyncStorage();
+            const response = await apiAxios.get(`/user/apiServicos/getComprasFeitas?page=${page > 0 ? page - 1 : page}`, { headers: { 'Authorization' : `Bearer ${token}`}});
             setListServicos(response.data.content);
             setTotalPages(response.data.totalPages);
 

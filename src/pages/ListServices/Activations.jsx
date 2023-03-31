@@ -38,7 +38,7 @@ const Activations = props => {
 
     //meta title
     document.title="store24h | Lista de Serviços";
-    const {  smsList, user } = useContext(ManagerServiceContext);
+    const {  smsList, user, getService } = useContext(ManagerServiceContext);
     // const [smsList, setSmsList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [lengthList, setLengthList] = useState(0);
@@ -74,6 +74,7 @@ const Activations = props => {
             await user();
             setErrorMsgApi("Ativação cancelada!");
             setLoadingCancel(false);
+            getService();
             handleClickSnackBar({vertical: 'top', horizontal: 'center'});
         } catch(e) {
             setErrorApi(true);
