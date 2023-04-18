@@ -7,22 +7,9 @@ import Logout from "../pages/Authentication/Logout";
 import ForgetPwd from "../pages/Authentication/ForgetPassword";
 
 //My
-import DashboardPage from "../pages/Dashboard/DashboardPage";
-import HistoryActivations from "../pages/HistoryActivations/HistoryActivations";
-import HistoryRent from "../pages/HistoryRent/HistoricRent";
-import CardSim from "../pages/CardSim/CardSim";
-import Operador from "../pages/Operador/Operador";
-import Payments from "../pages/Payments/Payments";
-import Funds from "../pages/Funds/Funds";
-import Transactions from "../pages/Transactions/Transactions";
-import Income from "../pages/Income/Income";
-import Rent from "../pages/Rent/Rent";
-import Identification from "../pages/Identification/Identification";
-import Market from "../pages/Market/Market";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import ListServices from "../pages/ListServices/ListServices";
 import ServicesBuys from "../pages/ServicesBuys/ServicesBuys";
-import Messages from "../pages/Messages/Messages";
 import ActivityService from "../pages/ActivityService/ActivityService";
 
 const authProtectedRoutes = [
